@@ -1,0 +1,65 @@
+[
+  {
+    "user_id": "6b168306-d03b-412d-9a58-e3bdab7b48ec",
+    "badge_id": "first_blood",
+    "badge_name": "First Blood",
+    "badge_description": "Solved your very first DSA problem on CodeClash.",
+    "badge_icon": "Award",
+    "unlocked_at": "2026-08-30T10:22:18.501248+00:00",
+    "_id": "f5d426ba-76e6-4cb9-a389-b62b5ba79504"
+  },
+  {
+    "user_id": "e62dab1b-d980-4d2f-aca4-970ad87b715b",
+    "badge_id": "first_blood",
+    "badge_name": "First Blood",
+    "badge_description": "Solved your very first DSA problem on CodeClash.",
+    "badge_icon": "Award",
+    "unlocked_at": "2026-08-30T10:23:17.011698+00:00",
+    "_id": "57076790-a90e-443c-bfeb-c6da51d919ea"
+  },
+  {
+    "user_id": "e62dab1b-d980-4d2f-aca4-970ad87b715b",
+    "badge_id": "first_win",
+    "badge_name": "Gladiator",
+    "badge_description": "Won your first 1v1 Battle Arena duel.",
+    "badge_icon": "Swords",
+    "unlocked_at": "2026-08-30T10:23:25.374875+00:00",
+    "_id": "472e8a71-c926-4cd8-a04f-f5bd83b4c55b"
+  },
+  {
+    "user_id": "f94641b2-baa5-45e3-8e73-baa5699b80b9",
+    "badge_id": "first_blood",
+    "badge_name": "First Blood",
+    "badge_description": "Solved your very first DSA problem on CodeClash.",
+    "badge_icon": "Award",
+    "unlocked_at": "2026-08-30T10:27:17.312824+00:00",
+    "_id": "a558ae32-c81a-436e-90a6-0f3791a9f1a2"
+  },
+  {
+    "user_id": "f94641b2-baa5-45e3-8e73-baa5699b80b9",
+    "badge_id": "first_win",
+    "badge_name": "Gladiator",
+    "badge_description": "Won your first 1v1 Battle Arena duel.",
+    "badge_icon": "Swords",
+    "unlocked_at": "2026-08-30T10:35:12.727228+00:00",
+    "_id": "0a96914d-c8a7-4601-9ab0-2f443781de83"
+  },
+  {
+    "user_id": "d1c11713-c8da-4fa0-af8f-29b555821e95",
+    "badge_id": "first_blood",
+    "badge_name": "First Blood",
+    "badge_description": "Solved your very first DSA problem on CodeClash.",
+    "badge_icon": "Award",
+    "unlocked_at": "2026-08-30T10:37:11.296370+00:00",
+    "_id": "1d2d40c8-43f2-42cb-902a-22970dde26b6"
+  },
+  {
+    "user_id": "d1c11713-c8da-4fa0-af8f-29b555821e95",
+    "badge_id": "first_win",
+    "badge_name": "Gladiator",
+    "badge_description": "Won your first 1v1 Battle Arena duel.",
+    "badge_icon": "Swords",
+    "unlocked_at": "2026-08-30T10:37:19.568693+00:00",
+    "_id": "86a8d8c8-4d74-4b6c-9c41-257b38485604"
+  }
+]

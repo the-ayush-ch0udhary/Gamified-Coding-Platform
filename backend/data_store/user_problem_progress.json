@@ -1,0 +1,38 @@
+[
+  {
+    "user_id": "6b168306-d03b-412d-9a58-e3bdab7b48ec",
+    "problem_id": "two-sum",
+    "concept_id": "arrays",
+    "difficulty": "Easy",
+    "status": "solved",
+    "solved_at": "2026-08-30T10:22:18.486571+00:00",
+    "_id": "0f9821fb-e3eb-4bbb-bed0-6e61267e8cbb"
+  },
+  {
+    "user_id": "e62dab1b-d980-4d2f-aca4-970ad87b715b",
+    "problem_id": "two-sum",
+    "concept_id": "arrays",
+    "difficulty": "Easy",
+    "status": "solved",
+    "solved_at": "2026-08-30T10:23:16.999748+00:00",
+    "_id": "5b4b40f4-f6ee-4f83-87b1-adb26cdc054c"
+  },
+  {
+    "user_id": "f94641b2-baa5-45e3-8e73-baa5699b80b9",
+    "problem_id": "contains-duplicate",
+    "concept_id": "arrays",
+    "difficulty": "Easy",
+    "status": "solved",
+    "solved_at": "2026-08-30T10:27:17.291229+00:00",
+    "_id": "676ceb0c-773e-4fd4-847b-adec39a25535"
+  },
+  {
+    "user_id": "d1c11713-c8da-4fa0-af8f-29b555821e95",
+    "problem_id": "two-sum",
+    "concept_id": "arrays",
+    "difficulty": "Easy",
+    "status": "solved",
+    "solved_at": "2026-08-30T10:37:11.243882+00:00",
+    "_id": "5b4546f4-c9cf-44a7-9d4a-33cae1a02c2d"
+  }
+]

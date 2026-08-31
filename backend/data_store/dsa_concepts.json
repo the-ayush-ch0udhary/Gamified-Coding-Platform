@@ -1,0 +1,301 @@
+[
+  {
+    "concept_id": "arrays",
+    "name": "Arrays & Hashing",
+    "description": "Master array operations, frequency hash maps, prefix sums, and two-pointer paradigms.",
+    "icon": "Grid",
+    "order": 1,
+    "levels": [
+      {
+        "level_number": 1,
+        "name": "Level 1: Array Fundamentals & Lookup",
+        "required_to_unlock": 0,
+        "total_problems": 2,
+        "problem_ids": [
+          "two-sum",
+          "contains-duplicate"
+        ]
+      },
+      {
+        "level_number": 2,
+        "name": "Level 2: Kadane's & Single Pass Optimization",
+        "required_to_unlock": 1,
+        "total_problems": 2,
+        "problem_ids": [
+          "maximum-subarray",
+          "best-time-to-buy-sell-stock"
+        ]
+      },
+      {
+        "level_number": 3,
+        "name": "Level 3: Two Pointers & Area Maximization",
+        "required_to_unlock": 2,
+        "total_problems": 1,
+        "problem_ids": [
+          "container-with-most-water"
+        ]
+      },
+      {
+        "level_number": 4,
+        "name": "Level 4: Prefix & Suffix Products",
+        "required_to_unlock": 3,
+        "total_problems": 1,
+        "problem_ids": [
+          "product-except-self"
+        ]
+      }
+    ],
+    "_id": "773e75e1-4d2e-4c6a-b772-580deebb59e0"
+  },
+  {
+    "concept_id": "strings",
+    "name": "Strings & Pattern Matching",
+    "description": "String manipulation, character frequency analysis, sliding window algorithms, and palindromes.",
+    "icon": "Type",
+    "order": 2,
+    "levels": [
+      {
+        "level_number": 1,
+        "name": "Level 1: Reversals & Character Frequencies",
+        "required_to_unlock": 0,
+        "total_problems": 2,
+        "problem_ids": [
+          "reverse-string",
+          "valid-anagram"
+        ]
+      },
+      {
+        "level_number": 2,
+        "name": "Level 2: Palindrome Verification & Pointers",
+        "required_to_unlock": 1,
+        "total_problems": 1,
+        "problem_ids": [
+          "valid-palindrome"
+        ]
+      },
+      {
+        "level_number": 3,
+        "name": "Level 3: Variable Sliding Window",
+        "required_to_unlock": 2,
+        "total_problems": 1,
+        "problem_ids": [
+          "longest-substring-without-repeating-characters"
+        ]
+      }
+    ],
+    "_id": "eb3e7ab9-bcd2-4ad1-853d-b49af17078ee"
+  },
+  {
+    "concept_id": "linked-lists",
+    "name": "Linked Lists",
+    "description": "Single and doubly linked lists, pointer manipulation, fast-and-slow runners, and reversals.",
+    "icon": "GitCommit",
+    "order": 3,
+    "levels": [
+      {
+        "level_number": 1,
+        "name": "Level 1: Pointer Iteration & In-Place Reversal",
+        "required_to_unlock": 0,
+        "total_problems": 1,
+        "problem_ids": [
+          "reverse-linked-list"
+        ]
+      },
+      {
+        "level_number": 2,
+        "name": "Level 2: Merging Sorted Sequences",
+        "required_to_unlock": 1,
+        "total_problems": 1,
+        "problem_ids": [
+          "merge-two-sorted-lists"
+        ]
+      },
+      {
+        "level_number": 3,
+        "name": "Level 3: Fast & Slow Runner Cycle Detection",
+        "required_to_unlock": 2,
+        "total_problems": 1,
+        "problem_ids": [
+          "linked-list-cycle"
+        ]
+      }
+    ],
+    "_id": "c9307623-044f-44f5-9823-3c0bab4783a7"
+  },
+  {
+    "concept_id": "stack-queue",
+    "name": "Stack & Queue",
+    "description": "LIFO & FIFO data structures, parentheses matching, monotonic stacks, and breadth queues.",
+    "icon": "Layers",
+    "order": 4,
+    "levels": [
+      {
+        "level_number": 1,
+        "name": "Level 1: Bracket Matching & LIFO Stack",
+        "required_to_unlock": 0,
+        "total_problems": 1,
+        "problem_ids": [
+          "valid-parentheses"
+        ]
+      },
+      {
+        "level_number": 2,
+        "name": "Level 2: Monotonic Stack & Next Greater",
+        "required_to_unlock": 1,
+        "total_problems": 1,
+        "problem_ids": [
+          "daily-temperatures"
+        ]
+      },
+      {
+        "level_number": 3,
+        "name": "Level 3: Two-Pointer Monotonic Elevation",
+        "required_to_unlock": 2,
+        "total_problems": 1,
+        "problem_ids": [
+          "trapping-rain-water"
+        ]
+      }
+    ],
+    "_id": "e0edec69-1d1f-4c79-9687-e0e379d6b0fe"
+  },
+  {
+    "concept_id": "trees",
+    "name": "Binary Trees & BST",
+    "description": "Tree traversals (DFS/BFS), binary search trees, recursion, height balancing, and validation.",
+    "icon": "Network",
+    "order": 5,
+    "levels": [
+      {
+        "level_number": 1,
+        "name": "Level 1: Recursive Tree Transformation",
+        "required_to_unlock": 0,
+        "total_problems": 1,
+        "problem_ids": [
+          "invert-binary-tree"
+        ]
+      },
+      {
+        "level_number": 2,
+        "name": "Level 2: Depth & Diameter Computation",
+        "required_to_unlock": 1,
+        "total_problems": 1,
+        "problem_ids": [
+          "maximum-depth-of-binary-tree"
+        ]
+      },
+      {
+        "level_number": 3,
+        "name": "Level 3: BST Invariant Validation",
+        "required_to_unlock": 2,
+        "total_problems": 1,
+        "problem_ids": [
+          "validate-binary-search-tree"
+        ]
+      }
+    ],
+    "_id": "ca49f8c2-565c-490b-b89c-f6dd2d4123f2"
+  },
+  {
+    "concept_id": "graphs",
+    "name": "Graphs & Grid Traversal",
+    "description": "Adjacency lists, BFS/DFS traversal, connected components, flood fill, and topological sort.",
+    "icon": "Share2",
+    "order": 6,
+    "levels": [
+      {
+        "level_number": 1,
+        "name": "Level 1: Matrix Connected Components & Flood Fill",
+        "required_to_unlock": 0,
+        "total_problems": 1,
+        "problem_ids": [
+          "number-of-islands"
+        ]
+      },
+      {
+        "level_number": 2,
+        "name": "Level 2: Breadth-First Multi-Source Waves",
+        "required_to_unlock": 1,
+        "total_problems": 1,
+        "problem_ids": [
+          "rotting-oranges"
+        ]
+      },
+      {
+        "level_number": 3,
+        "name": "Level 3: Directed Cycle Detection & Kahn's Algorithm",
+        "required_to_unlock": 2,
+        "total_problems": 1,
+        "problem_ids": [
+          "course-schedule"
+        ]
+      }
+    ],
+    "_id": "7afeca68-c7a3-4960-aa60-ee211e573a7f"
+  },
+  {
+    "concept_id": "dynamic-programming",
+    "name": "Dynamic Programming",
+    "description": "Memoization, tabulation, optimal substructure, overlapping subproblems, and state transitions.",
+    "icon": "Cpu",
+    "order": 7,
+    "levels": [
+      {
+        "level_number": 1,
+        "name": "Level 1: 1D Recurrence & Fibonacci Sequences",
+        "required_to_unlock": 0,
+        "total_problems": 1,
+        "problem_ids": [
+          "climbing-stairs"
+        ]
+      },
+      {
+        "level_number": 2,
+        "name": "Level 2: Unbounded Knapsack & Minimum Coins",
+        "required_to_unlock": 1,
+        "total_problems": 1,
+        "problem_ids": [
+          "coin-change"
+        ]
+      },
+      {
+        "level_number": 3,
+        "name": "Level 3: 2D Subsequence Alignment",
+        "required_to_unlock": 2,
+        "total_problems": 1,
+        "problem_ids": [
+          "longest-common-subsequence"
+        ]
+      }
+    ],
+    "_id": "18028636-b296-4920-9d1b-2adfb293e909"
+  },
+  {
+    "concept_id": "greedy",
+    "name": "Greedy Algorithms",
+    "description": "Locally optimal choices, interval scheduling, jump game reachability, and gas station circuits.",
+    "icon": "Zap",
+    "order": 8,
+    "levels": [
+      {
+        "level_number": 1,
+        "name": "Level 1: Farthest Reachability Simulation",
+        "required_to_unlock": 0,
+        "total_problems": 1,
+        "problem_ids": [
+          "jump-game"
+        ]
+      },
+      {
+        "level_number": 2,
+        "name": "Level 2: Circular Balance & Deficit Tracking",
+        "required_to_unlock": 1,
+        "total_problems": 1,
+        "problem_ids": [
+          "gas-station"
+        ]
+      }
+    ],
+    "_id": "a6978884-5bba-4773-91f5-aae3ce71678f"
+  }
+]

@@ -1,0 +1,90 @@
+[
+  {
+    "badge_id": "first_problem",
+    "name": "First Step",
+    "description": "Solved your very first algorithmic problem on CodeClash.",
+    "icon": "Target",
+    "criteria": {
+      "type": "solved_count",
+      "value": 1
+    },
+    "_id": "b8fa900e-abab-497c-8005-44151fd0730d"
+  },
+  {
+    "badge_id": "ten_problems",
+    "name": "Algorithm Apprentice",
+    "description": "Solved 10 DSA practice problems.",
+    "icon": "Award",
+    "criteria": {
+      "type": "solved_count",
+      "value": 10
+    },
+    "_id": "e8f5dd76-048f-4c54-84de-a34326f78ae1"
+  },
+  {
+    "badge_id": "fifty_problems",
+    "name": "Master of Algorithms",
+    "description": "Demonstrated mastery by solving 50 DSA problems.",
+    "icon": "Crown",
+    "criteria": {
+      "type": "solved_count",
+      "value": 50
+    },
+    "_id": "ee3ea0b9-25b9-43de-a886-08a2c86fc593"
+  },
+  {
+    "badge_id": "first_win",
+    "name": "Arena Victor",
+    "description": "Won your first real-time 1v1 coding battle.",
+    "icon": "Swords",
+    "criteria": {
+      "type": "battle_wins",
+      "value": 1
+    },
+    "_id": "76111240-6b00-413d-8ca4-821495a6181e"
+  },
+  {
+    "badge_id": "ten_wins",
+    "name": "Arena Champion",
+    "description": "Dominated the 1v1 battle arena with 10 match victories.",
+    "icon": "Trophy",
+    "criteria": {
+      "type": "battle_wins",
+      "value": 10
+    },
+    "_id": "bc217194-8914-410f-aac2-8ace613487a6"
+  },
+  {
+    "badge_id": "streak_7",
+    "name": "Week Warrior",
+    "description": "Maintained a 7-day daily practice streak.",
+    "icon": "Zap",
+    "criteria": {
+      "type": "streak_days",
+      "value": 7
+    },
+    "_id": "139588a8-3a0a-44a1-9562-85ea818077af"
+  },
+  {
+    "badge_id": "streak_30",
+    "name": "Relentless Coder",
+    "description": "Maintained an incredible 30-day daily practice streak.",
+    "icon": "Shield",
+    "criteria": {
+      "type": "streak_days",
+      "value": 30
+    },
+    "_id": "99be3823-69a1-44fe-9318-0032860974c4"
+  },
+  {
+    "badge_id": "hard_master",
+    "name": "Hardcore Coder",
+    "description": "Solved at least 3 Hard difficulty problems.",
+    "icon": "Sparkles",
+    "criteria": {
+      "type": "hard_problems",
+      "value": 3
+    },
+    "_id": "d16f2b8a-455e-4e5f-8888-f95149ad231b"
+  }
+]

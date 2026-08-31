@@ -1,0 +1,96 @@
+[
+  {
+    "battle_id": "b865ff73-701e-45b7-90e3-30c71c0aff6b",
+    "problem_id": "two-sum",
+    "start_time": "2026-08-30T10:22:25.286113+00:00",
+    "duration_seconds": 1800,
+    "status": "active",
+    "player1_id": "6b168306-d03b-412d-9a58-e3bdab7b48ec",
+    "player2_id": "cfb524ff-0135-44e4-897f-7725339aca11",
+    "player1_username": "PlayerA_1788085321",
+    "player2_username": "PlayerB_1788085321",
+    "winner_id": null,
+    "_id": "758759b0-bf26-472b-bdb8-7a014ec9383d"
+  },
+  {
+    "battle_id": "9d688c1d-29b8-4501-9292-27de3d8f98a7",
+    "problem_id": "two-sum",
+    "start_time": "2026-08-30T10:23:23.131221+00:00",
+    "duration_seconds": 1800,
+    "status": "completed",
+    "player1_id": "e62dab1b-d980-4d2f-aca4-970ad87b715b",
+    "player2_id": "a87d3348-f861-4e47-98fd-e47bac1e6558",
+    "player1_username": "PlayerA_1788085380",
+    "player2_username": "PlayerB_1788085380",
+    "winner_id": "e62dab1b-d980-4d2f-aca4-970ad87b715b",
+    "_id": "5fb574ff-8399-4278-beb2-1fb123e42f89",
+    "end_time": "2026-08-30T10:23:25.386057+00:00",
+    "reason": "solved",
+    "rating_delta": {
+      "e62dab1b-d980-4d2f-aca4-970ad87b715b": 16,
+      "a87d3348-f861-4e47-98fd-e47bac1e6558": -16
+    },
+    "new_ratings": {
+      "e62dab1b-d980-4d2f-aca4-970ad87b715b": 1016,
+      "a87d3348-f861-4e47-98fd-e47bac1e6558": 984
+    },
+    "xp_awarded": {
+      "e62dab1b-d980-4d2f-aca4-970ad87b715b": 60,
+      "a87d3348-f861-4e47-98fd-e47bac1e6558": 10
+    }
+  },
+  {
+    "battle_id": "83c819ea-738e-45c1-b414-c1c78c921376",
+    "problem_id": "invert-binary-tree",
+    "start_time": "2026-08-30T10:33:30.090537+00:00",
+    "duration_seconds": 1800,
+    "status": "completed",
+    "player1_id": "f94641b2-baa5-45e3-8e73-baa5699b80b9",
+    "player2_id": "93421467-14ca-4ae4-8743-31c4b92e1902",
+    "player1_username": "Ayush777",
+    "player2_username": "Ayush123",
+    "winner_id": "f94641b2-baa5-45e3-8e73-baa5699b80b9",
+    "_id": "bc294d99-4a42-42f7-b3c8-e9e8b56d90c4",
+    "end_time": "2026-08-30T10:35:12.762435+00:00",
+    "reason": "solved",
+    "rating_delta": {
+      "f94641b2-baa5-45e3-8e73-baa5699b80b9": 16,
+      "93421467-14ca-4ae4-8743-31c4b92e1902": -16
+    },
+    "new_ratings": {
+      "f94641b2-baa5-45e3-8e73-baa5699b80b9": 1016,
+      "93421467-14ca-4ae4-8743-31c4b92e1902": 984
+    },
+    "xp_awarded": {
+      "f94641b2-baa5-45e3-8e73-baa5699b80b9": 60,
+      "93421467-14ca-4ae4-8743-31c4b92e1902": 10
+    }
+  },
+  {
+    "battle_id": "62e97903-81f7-429f-a300-e2ba388c7b2a",
+    "problem_id": "two-sum",
+    "start_time": "2026-08-30T10:37:17.427097+00:00",
+    "duration_seconds": 1800,
+    "status": "completed",
+    "player1_id": "d1c11713-c8da-4fa0-af8f-29b555821e95",
+    "player2_id": "2f9f0150-ca2c-44d2-8cc3-aca697ba0487",
+    "player1_username": "PlayerA_1788086214",
+    "player2_username": "PlayerB_1788086214",
+    "winner_id": "d1c11713-c8da-4fa0-af8f-29b555821e95",
+    "_id": "da0bbcaa-74c0-4a6e-8c5d-d007f335278e",
+    "end_time": "2026-08-30T10:37:19.673361+00:00",
+    "reason": "solved",
+    "rating_delta": {
+      "d1c11713-c8da-4fa0-af8f-29b555821e95": 16,
+      "2f9f0150-ca2c-44d2-8cc3-aca697ba0487": -16
+    },
+    "new_ratings": {
+      "d1c11713-c8da-4fa0-af8f-29b555821e95": 1016,
+      "2f9f0150-ca2c-44d2-8cc3-aca697ba0487": 984
+    },
+    "xp_awarded": {
+      "d1c11713-c8da-4fa0-af8f-29b555821e95": 60,
+      "2f9f0150-ca2c-44d2-8cc3-aca697ba0487": 10
+    }
+  }
+]

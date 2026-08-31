@@ -1,0 +1,148 @@
+[
+  {
+    "user_id": "6b168306-d03b-412d-9a58-e3bdab7b48ec",
+    "type": "badge_unlocked",
+    "title": "Unlocked Badge: First Blood",
+    "description": "Solved your very first DSA problem on CodeClash.",
+    "created_at": "2026-08-30T10:22:18.501248+00:00",
+    "_id": "a771e9c7-5f0f-49ff-9c1a-87bb9fc69ce1"
+  },
+  {
+    "user_id": "6b168306-d03b-412d-9a58-e3bdab7b48ec",
+    "type": "problem_solved",
+    "title": "Solved Two Sum",
+    "description": "Earned +10 XP and +5 Coins (Easy)",
+    "problem_id": "two-sum",
+    "created_at": "2026-08-30T10:22:18.486571+00:00",
+    "_id": "460c9bf1-07c0-413b-a701-c5169f57c297"
+  },
+  {
+    "user_id": "e62dab1b-d980-4d2f-aca4-970ad87b715b",
+    "type": "badge_unlocked",
+    "title": "Unlocked Badge: First Blood",
+    "description": "Solved your very first DSA problem on CodeClash.",
+    "created_at": "2026-08-30T10:23:17.011698+00:00",
+    "_id": "61f744ce-fa12-4386-9b6a-e29a7fa9e81a"
+  },
+  {
+    "user_id": "e62dab1b-d980-4d2f-aca4-970ad87b715b",
+    "type": "problem_solved",
+    "title": "Solved Two Sum",
+    "description": "Earned +10 XP and +5 Coins (Easy)",
+    "problem_id": "two-sum",
+    "created_at": "2026-08-30T10:23:16.999748+00:00",
+    "_id": "d3fc758a-3fe6-4b9d-b409-08f7ce9b98fb"
+  },
+  {
+    "user_id": "e62dab1b-d980-4d2f-aca4-970ad87b715b",
+    "type": "badge_unlocked",
+    "title": "Unlocked Badge: Gladiator",
+    "description": "Won your first 1v1 Battle Arena duel.",
+    "created_at": "2026-08-30T10:23:25.374875+00:00",
+    "_id": "b1fa1e43-b942-424d-9a66-4c4f4fa27419"
+  },
+  {
+    "user_id": "e62dab1b-d980-4d2f-aca4-970ad87b715b",
+    "type": "battle_completed",
+    "title": "Battle Victory",
+    "description": "Rating change: +16, XP: +60",
+    "battle_id": "9d688c1d-29b8-4501-9292-27de3d8f98a7",
+    "created_at": "2026-08-30T10:23:25.386057+00:00",
+    "_id": "54d16e8d-0dd7-45e1-b91c-b6e1c46b2fe6"
+  },
+  {
+    "user_id": "a87d3348-f861-4e47-98fd-e47bac1e6558",
+    "type": "battle_completed",
+    "title": "Battle Defeat",
+    "description": "Rating change: -16, XP: +10",
+    "battle_id": "9d688c1d-29b8-4501-9292-27de3d8f98a7",
+    "created_at": "2026-08-30T10:23:25.386057+00:00",
+    "_id": "9164dc26-153a-47af-ae14-34169b8a071c"
+  },
+  {
+    "user_id": "f94641b2-baa5-45e3-8e73-baa5699b80b9",
+    "type": "badge_unlocked",
+    "title": "Unlocked Badge: First Blood",
+    "description": "Solved your very first DSA problem on CodeClash.",
+    "created_at": "2026-08-30T10:27:17.312824+00:00",
+    "_id": "1ac00df3-f8f5-4459-9719-0dfa66526242"
+  },
+  {
+    "user_id": "f94641b2-baa5-45e3-8e73-baa5699b80b9",
+    "type": "problem_solved",
+    "title": "Solved Contains Duplicate",
+    "description": "Earned +10 XP and +5 Coins (Easy)",
+    "problem_id": "contains-duplicate",
+    "created_at": "2026-08-30T10:27:17.291229+00:00",
+    "_id": "e976191d-2855-45d7-83ce-c182ccc85426"
+  },
+  {
+    "user_id": "f94641b2-baa5-45e3-8e73-baa5699b80b9",
+    "type": "badge_unlocked",
+    "title": "Unlocked Badge: Gladiator",
+    "description": "Won your first 1v1 Battle Arena duel.",
+    "created_at": "2026-08-30T10:35:12.727228+00:00",
+    "_id": "0e161de4-9bc1-4625-826d-bbda8fb610fe"
+  },
+  {
+    "user_id": "f94641b2-baa5-45e3-8e73-baa5699b80b9",
+    "type": "battle_completed",
+    "title": "Battle Victory",
+    "description": "Rating change: +16, XP: +60",
+    "battle_id": "83c819ea-738e-45c1-b414-c1c78c921376",
+    "created_at": "2026-08-30T10:35:12.762435+00:00",
+    "_id": "206ce957-1ff9-4c9b-84ac-70a260acf43d"
+  },
+  {
+    "user_id": "93421467-14ca-4ae4-8743-31c4b92e1902",
+    "type": "battle_completed",
+    "title": "Battle Defeat",
+    "description": "Rating change: -16, XP: +10",
+    "battle_id": "83c819ea-738e-45c1-b414-c1c78c921376",
+    "created_at": "2026-08-30T10:35:12.762435+00:00",
+    "_id": "e5c99aba-c938-43ac-955b-d51d76b6a15a"
+  },
+  {
+    "user_id": "d1c11713-c8da-4fa0-af8f-29b555821e95",
+    "type": "badge_unlocked",
+    "title": "Unlocked Badge: First Blood",
+    "description": "Solved your very first DSA problem on CodeClash.",
+    "created_at": "2026-08-30T10:37:11.296370+00:00",
+    "_id": "be523108-95a9-4c53-9ee5-295926ef6840"
+  },
+  {
+    "user_id": "d1c11713-c8da-4fa0-af8f-29b555821e95",
+    "type": "problem_solved",
+    "title": "Solved Two Sum",
+    "description": "Earned +10 XP and +5 Coins (Easy)",
+    "problem_id": "two-sum",
+    "created_at": "2026-08-30T10:37:11.243882+00:00",
+    "_id": "cea39298-06c8-48e4-9d11-2f65e979190d"
+  },
+  {
+    "user_id": "d1c11713-c8da-4fa0-af8f-29b555821e95",
+    "type": "badge_unlocked",
+    "title": "Unlocked Badge: Gladiator",
+    "description": "Won your first 1v1 Battle Arena duel.",
+    "created_at": "2026-08-30T10:37:19.568693+00:00",
+    "_id": "42f6eb84-12e0-4db9-8246-946fe6999e86"
+  },
+  {
+    "user_id": "d1c11713-c8da-4fa0-af8f-29b555821e95",
+    "type": "battle_completed",
+    "title": "Battle Victory",
+    "description": "Rating change: +16, XP: +60",
+    "battle_id": "62e97903-81f7-429f-a300-e2ba388c7b2a",
+    "created_at": "2026-08-30T10:37:19.673361+00:00",
+    "_id": "3f6990bd-dac1-4502-86ec-6388466879a3"
+  },
+  {
+    "user_id": "2f9f0150-ca2c-44d2-8cc3-aca697ba0487",
+    "type": "battle_completed",
+    "title": "Battle Defeat",
+    "description": "Rating change: -16, XP: +10",
+    "battle_id": "62e97903-81f7-429f-a300-e2ba388c7b2a",
+    "created_at": "2026-08-30T10:37:19.673361+00:00",
+    "_id": "96e85c42-ae18-4845-9c57-965bf1ac1b8a"
+  }
+]

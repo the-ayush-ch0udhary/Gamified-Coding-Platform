@@ -1,0 +1,15 @@
+{
+  "name": "codeclash",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CodeClash - Full-Stack Competitive DSA & Real-Time 1v1 Battle Platform",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && python -m uvicorn server:app --host 0.0.0.0 --port 8001 --reload",
+    "frontend": "cd frontend && npm run dev",
+    "install-all": "cd backend && pip install -r requirements.txt && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
