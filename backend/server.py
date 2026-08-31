@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import logging
 import random
@@ -7,7 +8,7 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List, Dict, Any
 
-from fastapi import FastAPI, HTTPException, Depends, status, WebSocket, WebSocketDisconnect, Query
+from fastapi import FastAPI, HTTPException, Depends, status, WebSocket, WebSocketDisconnect, Query, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
@@ -67,6 +68,27 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+from fastapi.responses import JSONResponse
+import traceback
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    err_str = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+    logger.error(f"Unhandled error on {request.url.path}: {err_str}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": str(exc), "path": request.url.path}
+    )
+
+@app.on_event("startup")
+async def startup_seed():
+    try:
+        from seed_problems import seed_all_data
+        seed_all_data(force=False)
+        logger.info("Database verified and auto-seeded successfully.")
+    except Exception as e:
+        logger.warning(f"Auto-seed error on startup: {e}")
 
 security = HTTPBearer(auto_error=False)
 
@@ -146,6 +168,7 @@ async def root():
 # ==================== 1. AUTHENTICATION ====================
 
 @app.post("/api/auth/signup", status_code=status.HTTP_201_CREATED)
+@app.post("/api/auth/register", status_code=status.HTTP_201_CREATED)
 async def signup(request: SignupRequest):
     # Strict validation of username, email format, and password complexity
     is_valid, error_msg = validate_signup_credentials(
@@ -281,7 +304,7 @@ async def get_dashboard_data(current_user: Dict[str, Any] = Depends(get_current_
     mastery_info = get_dsa_concept_mastery(user_id)
 
     # Calculate global rank
-    all_users = users_collection.find({}, sort=[("rating", -1)])
+    all_users = list(users_collection.find({}, sort=[("rating", -1)]))
     user_rank = 1
     for idx, u in enumerate(all_users):
         if u.get("_id") == user_id:
@@ -289,9 +312,9 @@ async def get_dashboard_data(current_user: Dict[str, Any] = Depends(get_current_
             break
 
     # Solved difficulties breakdown
-    solved_progress = user_problem_progress_collection.find({"user_id": user_id, "status": "solved"})
+    solved_progress = list(user_problem_progress_collection.find({"user_id": user_id, "status": "solved"}))
     solved_pids = {p["problem_id"] for p in solved_progress}
-    solved_problems_docs = problems_collection.find({"problem_id": {"$in": list(solved_pids)}})
+    solved_problems_docs = list(problems_collection.find({"problem_id": {"$in": list(solved_pids)}}))
     
     easy_count = sum(1 for p in solved_problems_docs if p.get("difficulty") == "Easy")
     medium_count = sum(1 for p in solved_problems_docs if p.get("difficulty") == "Medium")
@@ -299,7 +322,7 @@ async def get_dashboard_data(current_user: Dict[str, Any] = Depends(get_current_
 
     # Daily challenge
     today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    all_problems = problems_collection.find({})
+    all_problems = list(problems_collection.find({}))
     daily_idx = int(hash(today_str)) % max(1, len(all_problems))
     daily_problem = all_problems[daily_idx] if all_problems else None
     daily_solved = (daily_problem.get("problem_id") in solved_pids) if daily_problem else False
@@ -321,7 +344,7 @@ async def get_dashboard_data(current_user: Dict[str, Any] = Depends(get_current_
         p.pop("hiddenTestCases", None)
 
     # Recent activity
-    recent_activity = list(reversed(activity_collection.find({"user_id": user_id})))[:6]
+    recent_activity = list(activity_collection.find({"user_id": user_id}, sort=[("created_at", -1)]))[:6]
     for act in recent_activity:
         act.pop("_id", None)
 
@@ -367,13 +390,21 @@ async def get_dashboard_data(current_user: Dict[str, Any] = Depends(get_current_
 
 @app.get("/api/dsa/roadmap")
 async def get_dsa_roadmap(current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional)):
-    user_id = current_user["_id"] if current_user else "anonymous"
-    mastery_data = get_dsa_concept_mastery(user_id)
-    return mastery_data
+    try:
+        user_id = str(current_user["_id"]) if current_user and "_id" in current_user else "anonymous"
+        mastery_data = get_dsa_concept_mastery(user_id)
+        return mastery_data
+    except Exception as e:
+        logger.error(f"Error computing roadmap: {e}")
+        return {
+            "overall_dsa_progress": 0.0,
+            "concepts": [],
+            "next_recommended_concept": "Arrays & Hashing"
+        }
 
 @app.get("/api/dsa/concepts")
 async def get_dsa_concepts():
-    concepts = dsa_concepts_collection.find({})
+    concepts = list(dsa_concepts_collection.find({}))
     for c in concepts:
         c.pop("_id", None)
     return {"concepts": concepts}
@@ -385,17 +416,19 @@ async def get_dsa_concept_detail(concept_id: str, current_user: Optional[Dict[st
         raise HTTPException(status_code=404, detail="Concept not found")
 
     user_id = current_user["_id"] if current_user else "anonymous"
-    solved_progress = user_problem_progress_collection.find({"user_id": user_id, "status": "solved"})
+    solved_progress = list(user_problem_progress_collection.find({"user_id": user_id, "status": "solved"}))
     solved_pids = {p["problem_id"] for p in solved_progress}
 
-    levels = dsa_levels_collection.find({"concept_id": concept_id})
+    levels = list(dsa_levels_collection.find({"concept_id": concept_id}))
+    if not levels and "levels" in concept:
+        levels = concept.get("levels", [])
     levels.sort(key=lambda l: l.get("level_number", 1))
 
     levels_detail = []
     prev_unlocked = True
     for lvl in levels:
         lvl_pids = lvl.get("problem_ids", [])
-        problems_in_level = problems_collection.find({"problem_id": {"$in": lvl_pids}})
+        problems_in_level = list(problems_collection.find({"problem_id": {"$in": lvl_pids}}))
         problem_items = []
         solved_count = 0
         for p in problems_in_level:
@@ -472,7 +505,7 @@ async def get_problems(
 
     formatted_problems = []
     for problem in problems:
-        pid = problem.get("problem_id")
+        pid = problem.get("problem_id", problem.get("id"))
         is_solved = pid in solved_pids
 
         if status_filter == "solved" and not is_solved:
@@ -480,11 +513,12 @@ async def get_problems(
         if status_filter == "unsolved" and is_solved:
             continue
 
-        problem["id"] = pid
-        problem["is_solved"] = is_solved
-        problem.pop("_id", None)
-        problem.pop("hiddenTestCases", None)  # Protect hidden test cases
-        formatted_problems.append(problem)
+        p_copy = dict(problem)
+        p_copy["id"] = pid
+        p_copy["is_solved"] = is_solved
+        p_copy.pop("_id", None)
+        p_copy.pop("hiddenTestCases", None)  # Protect hidden test cases
+        formatted_problems.append(p_copy)
 
     return {"problems": formatted_problems, "count": len(formatted_problems)}
 
@@ -492,8 +526,8 @@ async def get_problems(
 async def get_recommended_problems(current_user: Dict[str, Any] = Depends(get_current_user)):
     user_id = current_user["_id"]
     mastery_info = get_dsa_concept_mastery(user_id)
-    all_problems = problems_collection.find({})
-    solved_progress = user_problem_progress_collection.find({"user_id": user_id, "status": "solved"})
+    all_problems = list(problems_collection.find({}))
+    solved_progress = list(user_problem_progress_collection.find({"user_id": user_id, "status": "solved"}))
     solved_pids = {p["problem_id"] for p in solved_progress}
 
     unsolved = [p for p in all_problems if p["problem_id"] not in solved_pids]
@@ -518,7 +552,7 @@ async def get_recommended_problems(current_user: Dict[str, Any] = Depends(get_cu
 
 @app.get("/api/problems/{problem_id}")
 async def get_problem(problem_id: str, current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional)):
-    problem = problems_collection.find_one({"problem_id": problem_id})
+    problem = problems_collection.find_one({"problem_id": problem_id}) or problems_collection.find_one({"id": problem_id})
     if not problem:
         raise HTTPException(status_code=404, detail="Problem not found")
 
@@ -526,17 +560,18 @@ async def get_problem(problem_id: str, current_user: Optional[Dict[str, Any]] = 
     if current_user:
         record = user_problem_progress_collection.find_one({
             "user_id": current_user["_id"],
-            "problem_id": problem_id,
+            "problem_id": problem.get("problem_id", problem_id),
             "status": "solved"
         })
         is_solved = record is not None
 
-    problem["id"] = problem.pop("problem_id")
-    problem["is_solved"] = is_solved
-    problem.pop("_id", None)
-    problem.pop("hiddenTestCases", None)  # Protect hidden test cases
+    res_problem = dict(problem)
+    res_problem["id"] = res_problem.get("problem_id", problem_id)
+    res_problem["is_solved"] = is_solved
+    res_problem.pop("_id", None)
+    res_problem.pop("hiddenTestCases", None)  # Protect hidden test cases
 
-    return problem
+    return res_problem
 
 # ==================== 5. SUBMISSIONS & CODE EXECUTION ====================
 
@@ -780,25 +815,27 @@ async def handle_battle_timeout(request: BattleTimeoutRequest, current_user: Dic
 @app.get("/api/daily-challenge")
 async def get_daily_challenge(current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional)):
     today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    all_problems = problems_collection.find({})
+    all_problems = list(problems_collection.find({}))
     if not all_problems:
         raise HTTPException(status_code=404, detail="No problems available")
 
     daily_idx = int(hash(today_str)) % len(all_problems)
     daily_problem = all_problems[daily_idx]
 
+    daily_pid = daily_problem.get("problem_id", daily_problem.get("id"))
     is_solved = False
     if current_user:
         solved_rec = user_problem_progress_collection.find_one({
             "user_id": current_user["_id"],
-            "problem_id": daily_problem["problem_id"],
+            "problem_id": daily_pid,
             "status": "solved"
         })
         is_solved = solved_rec is not None
 
-    daily_problem["id"] = daily_problem.pop("problem_id")
-    daily_problem.pop("_id", None)
-    daily_problem.pop("hiddenTestCases", None)
+    res_daily = dict(daily_problem)
+    res_daily["id"] = daily_pid
+    res_daily.pop("_id", None)
+    res_daily.pop("hiddenTestCases", None)
 
     # Time until UTC midnight
     now_utc = datetime.now(timezone.utc)
@@ -810,10 +847,106 @@ async def get_daily_challenge(current_user: Optional[Dict[str, Any]] = Depends(g
         "bonus_xp": XP_REWARDS["daily_challenge_bonus"],
         "is_solved": is_solved,
         "seconds_remaining": seconds_remaining,
-        "problem": daily_problem
+        "problem": res_daily
     }
 
-# ==================== 8. LEADERBOARD ====================
+# ==================== 8. BATTLE REST ENDPOINTS ====================
+
+class CreateBattleRequest(BaseModel):
+    player1: Optional[Dict[str, Any]] = None
+    player2: Optional[Dict[str, Any]] = None
+    problem_id: Optional[str] = None
+
+@app.post("/api/battle/create")
+@app.post("/api/battles/create")
+async def create_battle_endpoint(request: CreateBattleRequest, current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional)):
+    p1 = request.player1
+    if not p1 and current_user:
+        p1 = {
+            "user_id": current_user["_id"],
+            "username": current_user["username"],
+            "avatar": current_user.get("avatar"),
+            "rating": current_user.get("rating", 1000)
+        }
+    if not p1:
+        p1 = {"user_id": "player_1", "username": "Player 1", "rating": 1000}
+
+    p2 = request.player2 or {
+        "user_id": "bot_arena_ai",
+        "username": "Nexus_AI_Bot",
+        "rating": 1020,
+        "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=NexusAI"
+    }
+
+    room = battle_manager.create_battle(p1, p2, request.problem_id)
+    return {
+        "battle_id": room.battle_id,
+        "problem_id": room.problem_id,
+        "battle": room.to_dict()
+    }
+
+@app.get("/api/battle/{battle_id}")
+@app.get("/api/battles/{battle_id}")
+async def get_battle_details(battle_id: str, current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional)):
+    room = battle_manager.get_room(battle_id)
+    if not room:
+        db_battle = battles_collection.find_one({"battle_id": battle_id})
+        if not db_battle:
+            raise HTTPException(status_code=404, detail="Battle not found")
+        problem_id = db_battle.get("problem_id", "two-sum")
+        problem = problems_collection.find_one({"problem_id": problem_id})
+        if problem:
+            problem["id"] = problem.get("problem_id")
+            problem.pop("_id", None)
+            problem.pop("hiddenTestCases", None)
+        return {
+            "battle": {
+                "battle_id": battle_id,
+                "problem_id": problem_id,
+                "status": db_battle.get("status", "completed"),
+                "winner_id": db_battle.get("winner_id"),
+                "players": {
+                    db_battle.get("player1_id", "p1"): {
+                        "user_id": db_battle.get("player1_id"),
+                        "username": db_battle.get("player1_username", "Player 1"),
+                        "rating": 1000,
+                        "connected": False
+                    },
+                    db_battle.get("player2_id", "p2"): {
+                        "user_id": db_battle.get("player2_id"),
+                        "username": db_battle.get("player2_username", "Player 2"),
+                        "rating": 1000,
+                        "connected": False
+                    }
+                }
+            },
+            "problem": problem
+        }
+
+    problem = problems_collection.find_one({"problem_id": room.problem_id})
+    if problem:
+        problem["id"] = problem.get("problem_id")
+        problem.pop("_id", None)
+        problem.pop("hiddenTestCases", None)
+
+    return {
+        "battle": room.to_dict(),
+        "problem": problem
+    }
+
+@app.get("/api/battles/recent")
+@app.get("/api/battle/recent")
+async def get_recent_battles(current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional)):
+    query = {}
+    if current_user:
+        uid = current_user["_id"]
+        query = {"$or": [{"player1_id": uid}, {"player2_id": uid}]}
+    recent = list(battles_collection.find(query, sort=[("start_time", -1)]))[:10]
+    for b in recent:
+        b.pop("_id", None)
+    return {"battles": recent}
+
+# ==================== 9. LEADERBOARD ====================
 
 @app.get("/api/leaderboard")
 async def get_leaderboard(

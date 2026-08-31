@@ -144,7 +144,7 @@ class BattleManager:
         
         # If problem_id not provided, pick random problem
         if not problem_id:
-            all_problems = problems_collection.find({})
+            all_problems = list(problems_collection.find({}))
             if all_problems:
                 problem_id = random.choice(all_problems).get("problem_id")
             else:

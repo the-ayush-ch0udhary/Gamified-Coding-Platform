@@ -120,7 +120,7 @@ def check_and_award_badges(user_id: str) -> List[Dict[str, Any]]:
 
     unlocked_badges = []
     existing_user_badges = {b.get("badge_id") for b in user_badges_collection.find({"user_id": user_id})}
-    all_badges = badges_collection.find({})
+    all_badges = list(badges_collection.find({}))
 
     problems_solved = user.get("problems_solved", 0)
     wins = user.get("wins", 0)
@@ -177,8 +177,8 @@ def get_dsa_concept_mastery(user_id: str) -> Dict[str, Any]:
     Calculates independent concept progression, level statuses (Completed, Current, Locked),
     concept mastery percentages, and overall weighted DSA progress.
     """
-    concepts = dsa_concepts_collection.find({})
-    solved_progress = user_problem_progress_collection.find({"user_id": user_id, "status": "solved"})
+    concepts = list(dsa_concepts_collection.find({}))
+    solved_progress = list(user_problem_progress_collection.find({"user_id": user_id, "status": "solved"}))
     solved_problem_ids = {p.get("problem_id") for p in solved_progress}
 
     concept_stats = []
@@ -190,7 +190,9 @@ def get_dsa_concept_mastery(user_id: str) -> Dict[str, Any]:
         c_name = concept.get("name")
         c_icon = concept.get("icon", "Code")
 
-        levels = dsa_levels_collection.find({"concept_id": c_id})
+        levels = list(dsa_levels_collection.find({"concept_id": c_id}))
+        if not levels and "levels" in concept:
+            levels = concept.get("levels", [])
         # Sort levels by level_number
         levels.sort(key=lambda l: l.get("level_number", 1))
 

@@ -2,14 +2,12 @@
 Seed Problems, Concepts, Independent Roadmap Levels, and Badges for CodeClash Platform.
 Provides rich, explanatory problem statements with step-by-step walkthroughs, intuition, constraints, and hints.
 """
-from database import problems_collection, dsa_concepts_collection, badges_collection, users_collection, DatabaseProvider
+from database import problems_collection, dsa_concepts_collection, dsa_levels_collection, badges_collection, users_collection, DatabaseProvider
 from auth_utils import get_password_hash
 import uuid
+import logging
 
-# Clear existing seed collections
-problems_collection.delete_many({})
-dsa_concepts_collection.delete_many({})
-badges_collection.delete_many({})
+logger = logging.getLogger(__name__)
 
 # 1. DSA Concepts Hierarchy & Progressive Level Definitions
 concepts_data = [
@@ -110,7 +108,6 @@ concepts_data = [
         ]
     }
 ]
-dsa_concepts_collection.insert_many(concepts_data)
 
 # 2. Gamified Achievement Badges
 badges_data = [
@@ -906,7 +903,6 @@ Keep track of the farthest index reachable (`max_reach = 0`). As you iterate thr
         "hiddenTestCases": [{"input": "[0]", "expectedOutput": "true"}]
     }
 ]
-problems_collection.insert_many(problems_list)
 
 # 4. Create Demo Ranked Users
 demo_users = [
@@ -957,8 +953,35 @@ demo_users = [
     }
 ]
 
-for du in demo_users:
-    if not users_collection.find_one({"_id": du["_id"]}):
-        users_collection.insert_one(du)
+def seed_all_data(force: bool = False):
+    if not force and problems_collection.count_documents({}) >= 18 and dsa_concepts_collection.count_documents({}) >= 8:
+        logger.info("Database already seeded.")
+        return
 
-print(f"Successfully seeded {len(problems_list)} problems with rich explanations, 8 concepts, levels, badges, and leaderboard demo users.")
+    problems_collection.delete_many({})
+    dsa_concepts_collection.delete_many({})
+    dsa_levels_collection.delete_many({})
+    badges_collection.delete_many({})
+
+    dsa_concepts_collection.insert_many([dict(c) for c in concepts_data])
+
+    for c in concepts_data:
+        c_id = c["concept_id"]
+        for lvl in c.get("levels", []):
+            lvl_doc = {**lvl, "concept_id": c_id}
+            dsa_levels_collection.insert_one(lvl_doc)
+
+    badges_collection.insert_many([dict(b) for b in badges_data])
+    problems_collection.insert_many([dict(p) for p in problems_list])
+
+    for du in demo_users:
+        if not users_collection.find_one({"_id": du["_id"]}):
+            users_collection.insert_one(dict(du))
+
+    print(f"Successfully seeded {len(problems_list)} problems with rich explanations, 8 concepts, levels, badges, and leaderboard demo users.")
+
+if __name__ == "__main__":
+    seed_all_data(force=True)
+else:
+    seed_all_data(force=False)
+
