@@ -283,12 +283,30 @@ class BattleManager:
         if user_id in room.players:
             room.players[user_id]["connected"] = False
 
+        # If battle was active and a player exits/disconnects, it's an immediate forfeit and loss!
+        if room.status == "active":
+            opponent_id = next((uid for uid in room.players.keys() if uid != user_id), None)
+            if opponent_id:
+                logger.info(f"Player {user_id} disconnected/exited from battle {battle_id}. Opponent {opponent_id} wins by forfeit.")
+                await self.finish_battle(battle_id, winner_id=opponent_id, reason="forfeit")
+                return
+
         # Broadcast state update
         await self.broadcast(battle_id, {
             "type": "player_disconnected",
             "user_id": user_id,
             "battle": room.to_dict()
         })
+
+    async def forfeit_battle(self, battle_id: str, forfeiting_user_id: str) -> bool:
+        room = self.get_room(battle_id)
+        if not room or room.status != "active":
+            return False
+        opponent_id = next((uid for uid in room.players.keys() if uid != forfeiting_user_id), None)
+        if opponent_id:
+            await self.finish_battle(battle_id, winner_id=opponent_id, reason="forfeit")
+            return True
+        return False
 
     async def broadcast(self, battle_id: str, message: Dict[str, Any]):
         room = self.get_room(battle_id)

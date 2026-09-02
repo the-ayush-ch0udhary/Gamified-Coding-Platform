@@ -473,11 +473,9 @@ export default function BattleLobbyPage() {
                         ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
                         : b.result === "draw"
                         ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30"
-                        : b.result === "in_progress"
-                        ? "bg-primary/10 text-primary border border-primary/30 animate-pulse"
                         : "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30"
                     }`}>
-                      {b.result === "in_progress" ? "ACTIVE" : b.result}
+                      {b.result}
                     </span>
                     <div className="min-w-0">
                       <div className="text-foreground font-semibold truncate max-w-[130px]">
@@ -490,17 +488,9 @@ export default function BattleLobbyPage() {
                   </div>
 
                   <div className="text-right flex-shrink-0">
-                    {b.result === "in_progress" ? (
-                      <Link href={`/battle/${b.battle_id}`}>
-                        <Button size="sm" variant="outline" className="h-6 text-[10px] px-2 text-primary border-primary/30 hover:bg-primary/10">
-                          Resume
-                        </Button>
-                      </Link>
-                    ) : (
-                      <span className={`font-semibold ${b.rating_delta >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
-                        {b.rating_delta >= 0 ? `+${b.rating_delta}` : b.rating_delta} Elo
-                      </span>
-                    )}
+                    <span className={`font-semibold ${b.rating_delta >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+                      {b.rating_delta >= 0 ? `+${b.rating_delta}` : b.rating_delta} Elo
+                    </span>
                   </div>
                 </div>
               ))}

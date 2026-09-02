@@ -30,7 +30,8 @@ import {
   Crown,
   Terminal,
   Code2,
-  Check
+  Check,
+  Flag
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -59,14 +60,16 @@ export default function BattleRoomPage({ params }: { params: Promise<{ matchId: 
   const [activeTab, setActiveTab] = useState<string>("description");
 
   // Timer & Combat Feed
-  const [timeLeft, setTimeLeft] = useState<number>(1800); // 30 minutes
+  const [timeLeft, setTimeLeft] = useState<number>(1800);
   const [activityFeed, setActivityFeed] = useState<Array<{ time: string; text: string; type: "user" | "opponent" | "system" }>>([
-    { time: "00:00", text: "Match started! Both players received problem specifications.", type: "system" }
+    { time: "00:00", text: "Match started! First to solve passes all test cases to win.", type: "system" }
   ]);
 
-  // Finished Modal
+  // Modals
   const [battleFinishedModal, setBattleFinishedModal] = useState<boolean>(false);
   const [finishResult, setFinishResult] = useState<any>(null);
+  const [forfeitDialogOpen, setForfeitDialogOpen] = useState<boolean>(false);
+  const [isForfeiting, setIsForfeiting] = useState<boolean>(false);
 
   const wsRef = useRef<WebSocket | null>(null);
   const timerRef = useRef<any>(null);
@@ -159,10 +162,10 @@ export default function BattleRoomPage({ params }: { params: Promise<{ matchId: 
         const data = JSON.parse(event.data);
 
         if (data.type === "player_connected") {
-          addFeedEvent("Player entered combat arena.", "system");
+          addFeedEvent("Player connected to combat arena.", "system");
           if (data.battle) setBattleState(data.battle);
         } else if (data.type === "player_disconnected") {
-          addFeedEvent("Player connection lost.", "system");
+          addFeedEvent("Player disconnected / forfeited match.", "system");
           if (data.battle) setBattleState(data.battle);
         } else if (data.type === "opponent_progress") {
           const myId = authUid || currentUserId;
@@ -198,7 +201,12 @@ export default function BattleRoomPage({ params }: { params: Promise<{ matchId: 
           setBattleFinishedModal(true);
           const myId = authUid || currentUserId;
           const isWinner = data.results && myId && data.results[myId]?.is_winner;
-          addFeedEvent(isWinner ? "VICTORY! All test cases passed first!" : "Match concluded!", "system");
+          
+          if (data.reason === "forfeit") {
+            addFeedEvent(isWinner ? "VICTORY! Opponent surrendered or exited the match!" : "DEFEAT! Match forfeited.", "system");
+          } else {
+            addFeedEvent(isWinner ? "VICTORY! All test cases passed first!" : "Match concluded!", "system");
+          }
 
           if (isWinner) {
             try {
@@ -322,6 +330,29 @@ export default function BattleRoomPage({ params }: { params: Promise<{ matchId: 
     }
   };
 
+  const handleForfeit = async () => {
+    setIsForfeiting(true);
+    try {
+      const token = getAuthToken();
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        wsRef.current.send(JSON.stringify({ type: "forfeit" }));
+      }
+      await fetch(`${getApiUrl()}/api/battle/${matchId}/forfeit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+    } catch (e) {
+      console.error("Failed to forfeit:", e);
+    } finally {
+      setIsForfeiting(false);
+      setForfeitDialogOpen(false);
+      router.push("/battle");
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
@@ -413,7 +444,7 @@ export default function BattleRoomPage({ params }: { params: Promise<{ matchId: 
             </div>
           </div>
 
-          {/* CENTER: Digital Timer & VS Badge */}
+          {/* CENTER: Digital Timer, Forfeit & VS Badge */}
           <div className="col-span-4 flex flex-col items-center justify-center space-y-1 text-center">
             <div className={`flex items-center gap-1.5 px-3 py-1 rounded-lg border font-mono ${
               timeLeft < 300
@@ -423,9 +454,14 @@ export default function BattleRoomPage({ params }: { params: Promise<{ matchId: 
               <Timer className={`h-3.5 w-3.5 ${timeLeft < 300 ? "text-destructive" : "text-primary"}`} />
               <span className="text-base sm:text-lg font-bold tracking-wider">{formatTimer(timeLeft)}</span>
             </div>
-            <span className="text-[9px] uppercase font-mono font-semibold tracking-wider text-muted-foreground">
-              Live Synchronized Duel
-            </span>
+            
+            <button
+              onClick={() => setForfeitDialogOpen(true)}
+              className="text-[10px] text-destructive hover:underline font-mono inline-flex items-center gap-1 opacity-80 hover:opacity-100 transition-opacity"
+            >
+              <Flag className="h-3 w-3" />
+              <span>Surrender / Exit</span>
+            </button>
           </div>
 
           {/* PLAYER 2 (OPPONENT) */}
@@ -718,12 +754,49 @@ export default function BattleRoomPage({ params }: { params: Promise<{ matchId: 
         </div>
       </div>
 
-      {/* 4. POST-BATTLE RESULT MODAL */}
+      {/* 4. FORFEIT CONFIRMATION DIALOG */}
+      <Dialog open={forfeitDialogOpen} onOpenChange={setForfeitDialogOpen}>
+        <DialogContent className="bg-card border-border text-foreground max-w-sm shadow-xl">
+          <DialogHeader className="space-y-2">
+            <DialogTitle className="text-base font-bold text-destructive flex items-center gap-2">
+              <ShieldAlert className="h-5 w-5 text-destructive" />
+              Surrender Match?
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground leading-relaxed">
+              Exiting this live 1v1 battle counts as an immediate <strong>Defeat</strong> and will deduct Elo rating from your profile.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="flex gap-2 sm:justify-between pt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setForfeitDialogOpen(false)}
+              className="text-xs"
+            >
+              Continue Duel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleForfeit}
+              disabled={isForfeiting}
+              className="text-xs font-bold"
+            >
+              {isForfeiting ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : null}
+              Confirm Forfeit
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 5. POST-BATTLE RESULT MODAL */}
       <Dialog open={battleFinishedModal} onOpenChange={setBattleFinishedModal}>
         <DialogContent className="bg-card border-border text-foreground max-w-md shadow-2xl">
           {(() => {
             const isWinner = finishResult?.results?.[currentUserId]?.is_winner;
             const isDraw = finishResult?.is_draw;
+            const isForfeit = finishResult?.reason === "forfeit";
             const userRes = finishResult?.results?.[currentUserId] || {};
 
             return (
@@ -742,7 +815,11 @@ export default function BattleRoomPage({ params }: { params: Promise<{ matchId: 
                     {isWinner ? "Match Victory!" : isDraw ? "Draw / Timeout" : "Defeat"}
                   </DialogTitle>
                   <DialogDescription className="text-xs text-muted-foreground">
-                    {isWinner
+                    {isForfeit
+                      ? isWinner
+                        ? "Opponent surrendered or exited the match! Victory awarded."
+                        : "You surrendered / exited the match. Defeat recorded."
+                      : isWinner
                       ? "Flawless submission! You solved the problem first and took the win."
                       : isDraw
                       ? "Battle timed out with equal test case results."

@@ -735,23 +735,45 @@ async def get_battle_history(current_user: Dict[str, Any] = Depends(get_current_
     battles.sort(key=lambda b: str(b.get("start_time") or ""), reverse=True)
 
     formatted_history = []
+    now_iso = datetime.now(timezone.utc).isoformat()
+
     for b in battles:
         is_p1 = b.get("player1_id") == user_id
+        p1_id = b.get("player1_id")
+        p2_id = b.get("player2_id")
         opponent_name = b.get("player2_username") if is_p1 else b.get("player1_username")
         winner_id = b.get("winner_id")
-        
         status = b.get("status", "completed")
+
+        # If a battle was left as active/abandoned, auto-settle it as a forfeit loss
+        if status == "active" or not winner_id:
+            # Auto-forfeit in DB so it never remains active
+            opponent_id = p2_id if is_p1 else p1_id
+            winner_id = opponent_id
+            status = "completed"
+            battles_collection.update_one(
+                {"battle_id": b.get("battle_id")},
+                {"$set": {
+                    "status": "completed",
+                    "winner_id": winner_id,
+                    "end_time": b.get("end_time") or now_iso,
+                    "reason": "forfeit",
+                    "rating_delta": {user_id: -16, opponent_id: 16}
+                }}
+            )
+        
         if winner_id == user_id:
             result = "win"
         elif not winner_id and status in ("timeout", "draw"):
             result = "draw"
-        elif status == "active":
-            result = "in_progress"
         else:
             result = "loss"
             
         rating_delta_map = b.get("rating_delta") or {}
-        delta = rating_delta_map.get(user_id, 0) if isinstance(rating_delta_map, dict) else 0
+        if isinstance(rating_delta_map, dict):
+            delta = rating_delta_map.get(user_id, 16 if result == "win" else -16 if result == "loss" else 0)
+        else:
+            delta = 16 if result == "win" else -16 if result == "loss" else 0
 
         problem_id = b.get("problem_id", "two-sum")
         problem = problems_collection.find_one({"problem_id": problem_id})
@@ -763,13 +785,37 @@ async def get_battle_history(current_user: Dict[str, Any] = Depends(get_current_
             "problem_title": problem_title,
             "opponent_name": opponent_name or "Arena Opponent",
             "result": result,
-            "status": status,
+            "status": "completed",
             "rating_delta": delta,
             "start_time": b.get("start_time"),
-            "end_time": b.get("end_time")
+            "end_time": b.get("end_time") or now_iso
         })
 
     return {"battles": formatted_history}
+
+@app.post("/api/battle/{match_id}/forfeit")
+async def forfeit_battle_endpoint(match_id: str, current_user: Dict[str, Any] = Depends(get_current_user)):
+    user_id = current_user["_id"]
+    success = await battle_manager.forfeit_battle(match_id, user_id)
+    if not success:
+        db_battle = battles_collection.find_one({"battle_id": match_id})
+        if db_battle and db_battle.get("status") == "active":
+            p1_id = db_battle.get("player1_id")
+            p2_id = db_battle.get("player2_id")
+            winner_id = p2_id if user_id == p1_id else p1_id
+            now_iso = datetime.now(timezone.utc).isoformat()
+            battles_collection.update_one(
+                {"battle_id": match_id},
+                {"$set": {
+                    "status": "completed",
+                    "winner_id": winner_id,
+                    "end_time": now_iso,
+                    "reason": "forfeit",
+                    "rating_delta": {user_id: -16, winner_id: 16}
+                }}
+            )
+            return {"success": True, "message": "Battle forfeited as loss"}
+    return {"success": success}
 
 @app.post("/api/battle/create")
 async def create_battle_direct(
@@ -1262,6 +1308,8 @@ async def ws_battle_room(websocket: WebSocket, match_id: str, token: Optional[st
                 code = data.get("code", "")
                 language = data.get("language", "python")
                 await battle_manager.handle_submit(match_id, user_id, code, language)
+            elif msg_type == "forfeit":
+                await battle_manager.forfeit_battle(match_id, user_id)
 
     except WebSocketDisconnect:
         await battle_manager.unregister_connection(match_id, user_id)

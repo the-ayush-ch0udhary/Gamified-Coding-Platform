@@ -4,12 +4,17 @@
     "problem_id": "two-sum",
     "start_time": "2026-08-30T10:22:25.286113+00:00",
     "duration_seconds": 1800,
-    "status": "active",
+    "status": "completed",
     "player1_id": "6b168306-d03b-412d-9a58-e3bdab7b48ec",
     "player2_id": "cfb524ff-0135-44e4-897f-7725339aca11",
     "player1_username": "PlayerA_1788085321",
     "player2_username": "PlayerB_1788085321",
-    "winner_id": null,
+    "winner_id": "cfb524ff-0135-44e4-897f-7725339aca11",
+    "reason": "forfeit",
+    "rating_delta": {
+      "6b168306-d03b-412d-9a58-e3bdab7b48ec": -16,
+      "cfb524ff-0135-44e4-897f-7725339aca11": 16
+    },
     "_id": "758759b0-bf26-472b-bdb8-7a014ec9383d"
   },
   {
