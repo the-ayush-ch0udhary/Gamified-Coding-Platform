@@ -19,6 +19,7 @@ export type Problem = {
   starter_code?: { [key: string]: string };
   defaultCode?: string;
   testCases?: TestCase[];
+  hints?: string[];
   is_solved?: boolean;
 };
 

@@ -34,7 +34,7 @@ export function UserNav({ user, onLogout }: UserNavProps) {
   if (!user) {
     return (
       <Link href="/auth/login">
-        <Button size="sm" variant="default" className="h-8 text-xs font-semibold bg-accent hover:bg-accent/90 text-white">
+        <Button size="sm" className="h-8 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm">
           <LogIn className="mr-1.5 h-3.5 w-3.5" />
           Sign In
         </Button>
@@ -47,50 +47,50 @@ export function UserNav({ user, onLogout }: UserNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-9 w-9 rounded-full ring-2 ring-accent/30 p-0 hover:ring-accent transition-all">
-          <Avatar className="h-9 w-9">
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full ring-2 ring-primary/20 p-0 hover:ring-primary transition-all">
+          <Avatar className="h-8 w-8">
             <AvatarImage src={user.avatar} alt={user.username} />
-            <AvatarFallback className="bg-purple-900 text-purple-200 font-mono font-bold text-xs">
+            <AvatarFallback className="bg-primary/10 text-primary font-mono font-bold text-xs">
               {initials}
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-[#18181b] border-border text-foreground" align="end" forceMount>
+      <DropdownMenuContent className="w-56 bg-popover border-border text-popover-foreground shadow-xl" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-bold leading-none">{user.username}</p>
+            <p className="text-sm font-bold leading-none text-foreground">{user.username}</p>
             <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
-            <div className="flex items-center gap-2 mt-1.5 pt-1.5 border-t border-border/50 text-[11px] font-mono text-purple-400">
-              <span>Rating: <strong className="text-white">{user.rating || 1000}</strong></span>
+            <div className="flex items-center gap-2 mt-1.5 pt-1.5 border-t border-border text-[11px] font-mono text-muted-foreground">
+              <span>Rating: <strong className="text-primary">{user.rating || 1000}</strong></span>
               <span>•</span>
-              <span>XP: <strong className="text-white">{user.total_points || 0}</strong></span>
+              <span>XP: <strong className="text-foreground">{user.total_points || 0}</strong></span>
             </div>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator className="bg-border/60" />
+        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild className="cursor-pointer text-xs">
             <Link href="/profile">
-              <UserIcon className="mr-2 h-4 w-4 text-purple-400" />
+              <UserIcon className="mr-2 h-4 w-4 text-primary" />
               <span>Profile & Badges</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="cursor-pointer text-xs">
             <Link href="/battle">
-              <Swords className="mr-2 h-4 w-4 text-accent" />
+              <Swords className="mr-2 h-4 w-4 text-primary" />
               <span>1v1 Battle Arena</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="cursor-pointer text-xs">
             <Link href="/leaderboard">
-              <Trophy className="mr-2 h-4 w-4 text-yellow-400" />
+              <Trophy className="mr-2 h-4 w-4 text-amber-500" />
               <span>Leaderboard</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator className="bg-border/60" />
-        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-xs text-red-400 hover:text-red-300">
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-xs text-destructive focus:text-destructive">
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

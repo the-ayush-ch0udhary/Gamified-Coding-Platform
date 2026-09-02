@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Loader2, RotateCcw, Copy, Check, Terminal, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/components/theme-provider";
 import {
   Select,
   SelectContent,
@@ -22,10 +23,10 @@ import {
 const Editor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center bg-[#18181b] text-muted-foreground">
+    <div className="flex h-full w-full items-center justify-center bg-card text-muted-foreground">
       <div className="flex items-center gap-2">
-        <Loader2 className="h-5 w-5 animate-spin text-accent" />
-        <span className="text-sm font-mono">Loading Monaco Editor...</span>
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+        <span className="text-sm font-mono">Loading Code Editor...</span>
       </div>
     </div>
   ),
@@ -53,6 +54,7 @@ export function MonacoCodeEditor({
   const [fontSize, setFontSize] = useState<number>(14);
   const [copied, setCopied] = useState<boolean>(false);
   const [monacoLang, setMonacoLang] = useState<string>("python");
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     const map: { [key: string]: string } = {
@@ -72,22 +74,24 @@ export function MonacoCodeEditor({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const editorTheme = resolvedTheme === "light" ? "vs" : "vs-dark";
+
   return (
-    <div className="flex h-full flex-col rounded-lg border border-border/80 bg-[#121214] shadow-md overflow-hidden">
+    <div className="flex h-full flex-col rounded-lg border border-border bg-card shadow-sm overflow-hidden">
       {/* Editor Top Bar */}
-      <div className="flex items-center justify-between border-b border-border/60 bg-[#18181b]/90 px-3 py-2 text-xs">
+      <div className="flex items-center justify-between border-b border-border bg-muted/40 px-3 py-2 text-xs">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 font-mono text-muted-foreground">
-            <Terminal className="h-4 w-4 text-accent" />
+            <Terminal className="h-4 w-4 text-primary" />
             <span className="font-semibold text-foreground">Code Editor</span>
           </div>
 
           {onLanguageChange && (
             <Select value={language} onValueChange={onLanguageChange}>
-              <SelectTrigger className="h-7 w-[120px] bg-[#202024] border-border text-xs">
+              <SelectTrigger className="h-7 w-[120px] bg-background border-border text-xs">
                 <SelectValue placeholder="Language" />
               </SelectTrigger>
-              <SelectContent className="bg-[#202024] border-border text-xs">
+              <SelectContent className="bg-popover border-border text-xs">
                 <SelectItem value="python">Python 3</SelectItem>
                 <SelectItem value="javascript">JavaScript</SelectItem>
                 <SelectItem value="cpp">C++ 17</SelectItem>
@@ -106,7 +110,7 @@ export function MonacoCodeEditor({
                 <span>{fontSize}px</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-[#202024] border-border text-xs">
+            <DropdownMenuContent align="end" className="bg-popover border-border text-xs">
               {[12, 14, 16, 18].map((size) => (
                 <DropdownMenuItem
                   key={size}
@@ -127,7 +131,7 @@ export function MonacoCodeEditor({
             onClick={handleCopy}
             title="Copy Code"
           >
-            {copied ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
           </Button>
 
           {/* Reset Button */}
@@ -146,16 +150,16 @@ export function MonacoCodeEditor({
       </div>
 
       {/* Monaco Editor Container */}
-      <div className="flex-1 w-full min-h-[300px] overflow-hidden">
+      <div className="flex-1 w-full min-h-[300px] overflow-hidden bg-card">
         <Editor
           height={height}
           language={monacoLang}
           value={code}
-          theme="vs-dark"
+          theme={editorTheme}
           onChange={(val) => onChange(val || "")}
           options={{
             fontSize: fontSize,
-            fontFamily: "'Source Code Pro', 'JetBrains Mono', 'Fira Code', monospace",
+            fontFamily: "'JetBrains Mono', 'Source Code Pro', 'Fira Code', monospace",
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
             automaticLayout: true,

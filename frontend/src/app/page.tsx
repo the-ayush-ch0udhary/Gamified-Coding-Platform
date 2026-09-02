@@ -3,40 +3,46 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Code, Swords, Trophy, BotMessageSquare, Sparkles, Flame, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, Code, Swords, Trophy, BotMessageSquare, Sparkles, Flame, ShieldCheck, Zap, ChevronRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/icons";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { isAuthenticated } from "@/lib/auth";
 
 const features = [
   {
     title: "Concept Skill Trees",
-    description: "Progress through structured DSA levels from Arrays to Dynamic Programming with independent mastery tracking.",
+    description: "Progress through structured DSA tracks from Arrays to Dynamic Programming with granular mastery analytics.",
     icon: Code,
     href: "/practice",
-    badge: "Roadmap"
+    badge: "Roadmap",
+    color: "text-blue-500 bg-blue-500/10 border-blue-500/20"
   },
   {
     title: "Real-Time 1v1 Battles",
-    description: "Challenge peers to live synchronized coding duels. First to solve wins rating, XP, and glory.",
+    description: "Challenge peers or AI in live synchronized coding duels with instant sandbox evaluation and Elo ratings.",
     icon: Swords,
     href: "/battle",
-    badge: "Competitive"
+    badge: "Competitive",
+    color: "text-purple-500 bg-purple-500/10 border-purple-500/20"
   },
   {
-    title: "Global Elo Leaderboards",
-    description: "Climb the ranks from Bronze to Grandmaster with a server-authoritative Elo rating system.",
+    title: "Ranked Global Elo",
+    description: "Climb competitive tiers from Bronze to Grandmaster with server-authoritative matchmaking.",
     icon: Trophy,
     href: "/leaderboard",
-    badge: "Ranked"
+    badge: "Ranked",
+    color: "text-amber-500 bg-amber-500/10 border-amber-500/20"
   },
   {
-    title: "AI Code Explainer",
-    description: "Get senior-engineer-grade line-by-line breakdowns, complexity analysis, and edge case detection.",
+    title: "Senior AI Code Explainer",
+    description: "Receive line-by-line breakdowns, asymptotic complexity audits, and guided hint progressions.",
     icon: BotMessageSquare,
     href: "/explainer",
-    badge: "AI Powered"
+    badge: "AI Guidance",
+    color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20"
   }
 ];
 
@@ -50,91 +56,116 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#121214] text-foreground selection:bg-purple-500 selection:text-white">
+    <div className="flex flex-col min-h-screen bg-background text-foreground transition-colors duration-200">
+      {/* Landing Navbar */}
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
+        <div className="container flex h-14 max-w-6xl items-center justify-between px-4 mx-auto">
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary text-primary-foreground shadow-sm">
+              <Logo className="h-4 w-4" />
+            </div>
+            <span className="font-headline font-bold text-base text-foreground">CodeClash</span>
+          </Link>
+
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link href="/auth/login">
+              <Button size="sm" variant="ghost" className="h-8 text-xs font-semibold">
+                Sign In
+              </Button>
+            </Link>
+            <Link href="/auth/login">
+              <Button size="sm" className="h-8 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm">
+                Get Started
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative overflow-hidden pt-20 pb-24 md:pt-32 md:pb-36 border-b border-border/40">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,0,255,0.25),rgba(255,255,255,0))]" />
-          <div className="container relative z-10 px-4 md:px-6 mx-auto text-center space-y-8 max-w-4xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-950/40 px-4 py-1.5 text-xs font-mono text-purple-300 backdrop-blur-md shadow-lg shadow-purple-900/20">
-              <Sparkles className="h-3.5 w-3.5 text-accent animate-spin" />
-              <span>Next-Gen Competitive DSA Platform</span>
+        <section className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-28 border-b border-border">
+          <div className="container relative z-10 px-4 md:px-6 mx-auto text-center space-y-6 max-w-4xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-mono text-primary">
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Competitive DSA & Real-Time Duels</span>
             </div>
 
-            <h1 className="text-4xl font-bold font-headline tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl">
-              Master DSA Through{" "}
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-[#BF00FF] bg-clip-text text-transparent">
+            <h1 className="text-4xl font-extrabold font-headline tracking-tight sm:text-6xl md:text-7xl text-foreground">
+              Master Algorithmic Coding in{" "}
+              <span className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-indigo-400 bg-clip-text text-transparent">
                 Real-Time Battles
               </span>
             </h1>
 
-            <p className="mx-auto max-w-2xl text-muted-foreground text-base sm:text-lg md:text-xl leading-relaxed">
-              Transform monotonous coding practice into an exhilarating eSport. Level up through concept skill trees, earn achievements, and compete in 1v1 coding duels.
+            <p className="mx-auto max-w-2xl text-muted-foreground text-sm sm:text-base md:text-lg leading-relaxed">
+              Transform interview prep into an engaging sport. Level up through structured concept trees, test against hidden judge cases, and duel live opponents.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <Link href="/auth/login" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto h-13 px-8 text-base font-bold bg-gradient-to-r from-[#4B0082] to-[#BF00FF] hover:from-[#5c00a0] hover:to-[#d000ff] text-white shadow-xl shadow-purple-900/40 transition-all hover:scale-105">
-                  Enter The Arena <ArrowRight className="ml-2 h-5 w-5" />
+                <Button size="lg" className="w-full sm:w-auto h-11 px-6 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all hover:scale-[1.02]">
+                  Enter Arena <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/practice" className="w-full sm:w-auto">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto h-13 px-8 text-base font-semibold border-border bg-secondary/30 hover:bg-secondary/60">
-                  Explore Problems
+                <Button size="lg" variant="outline" className="w-full sm:w-auto h-11 px-6 text-sm font-semibold border-border bg-background hover:bg-muted/50">
+                  Explore Problem Catalog
                 </Button>
               </Link>
             </div>
 
-            {/* Quick Feature Tickers */}
-            <div className="pt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-xs font-mono text-muted-foreground">
-              <div className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-card/40 border border-border/50">
-                <Zap className="h-4 w-4 text-accent" />
-                <span>Instant Sandbox Runner</span>
+            {/* Feature Badges */}
+            <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-xs font-mono text-muted-foreground">
+              <div className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-card border border-border shadow-xs">
+                <Zap className="h-3.5 w-3.5 text-primary" />
+                <span>Instant Sandbox</span>
               </div>
-              <div className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-card/40 border border-border/50">
-                <Flame className="h-4 w-4 text-amber-400" />
-                <span>Daily Streaks & Badges</span>
+              <div className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-card border border-border shadow-xs">
+                <Flame className="h-3.5 w-3.5 text-amber-500" />
+                <span>Daily Streaks</span>
               </div>
-              <div className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-card/40 border border-border/50">
-                <Swords className="h-4 w-4 text-purple-400" />
-                <span>Live 1v1 WebSocket Duels</span>
+              <div className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-card border border-border shadow-xs">
+                <Swords className="h-3.5 w-3.5 text-purple-500" />
+                <span>1v1 Live Duels</span>
               </div>
-              <div className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-card/40 border border-border/50">
-                <ShieldCheck className="h-4 w-4 text-green-400" />
-                <span>Hidden Server Test Cases</span>
+              <div className="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-card border border-border shadow-xs">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                <span>Hidden Test Cases</span>
               </div>
             </div>
           </div>
         </section>
 
         {/* Feature Cards Section */}
-        <section className="py-20 md:py-32 bg-[#151518]">
+        <section className="py-16 md:py-24 bg-muted/30">
           <div className="container px-4 md:px-6 mx-auto max-w-6xl">
-            <div className="text-center space-y-3 mb-16">
-              <h2 className="text-3xl sm:text-4xl font-bold font-headline tracking-tight">
-                Designed for Competitive Coders
+            <div className="text-center space-y-2 mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold font-headline tracking-tight text-foreground">
+                Engineered for Algorithmic Mastery
               </h2>
-              <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
-                Everything you need to advance from novice to master algorithmic engineer.
+              <p className="text-muted-foreground max-w-xl mx-auto text-xs sm:text-sm">
+                Clean, focused tools designed to build deep problem-solving intuition.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               {features.map((f) => (
-                <Card key={f.title} className="bg-[#1c1c20] border-border/70 hover:border-accent/80 transition-all hover:shadow-lg hover:shadow-purple-950/20 group">
+                <Card key={f.title} className="bg-card border-border hover:border-primary/40 transition-all hover:shadow-md group">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <div className="h-12 w-12 rounded-xl bg-purple-950/60 border border-purple-800/40 flex items-center justify-center text-accent group-hover:scale-110 transition-transform">
-                      <f.icon className="h-6 w-6" />
+                    <div className={`h-10 w-10 rounded-lg flex items-center justify-center border ${f.color}`}>
+                      <f.icon className="h-5 w-5" />
                     </div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-[#25252a] text-purple-300">
+                    <Badge variant="outline" className="text-[10px] font-mono">
                       {f.badge}
-                    </span>
+                    </Badge>
                   </CardHeader>
-                  <CardContent className="space-y-3 pt-2">
-                    <CardTitle className="text-xl font-bold font-headline text-white group-hover:text-accent transition-colors">
+                  <CardContent className="space-y-2 pt-2">
+                    <CardTitle className="text-base font-bold font-headline text-foreground group-hover:text-primary transition-colors">
                       {f.title}
                     </CardTitle>
-                    <CardDescription className="text-muted-foreground text-sm leading-relaxed">
+                    <CardDescription className="text-muted-foreground text-xs leading-relaxed">
                       {f.description}
                     </CardDescription>
                   </CardContent>
@@ -143,19 +174,19 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Footer */}
-        <footer className="border-t border-border/40 py-8 bg-[#101012]">
-          <div className="container px-4 md:px-6 mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Logo className="h-5 w-5 text-accent" />
-              <span className="font-bold text-foreground">CodeClash Arena</span>
-              <span>• Full-Stack Competitive DSA Platform</span>
-            </div>
-            <p>&copy; {new Date().getFullYear()} CodeClash. All rights reserved.</p>
-          </div>
-        </footer>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border py-6 bg-card text-xs text-muted-foreground">
+        <div className="container px-4 md:px-6 mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 max-w-6xl">
+          <div className="flex items-center gap-2">
+            <Logo className="h-4 w-4 text-primary" />
+            <span className="font-semibold text-foreground">CodeClash</span>
+            <span>— Server-Authoritative DSA eSports</span>
+          </div>
+          <p>© {new Date().getFullYear()} CodeClash. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

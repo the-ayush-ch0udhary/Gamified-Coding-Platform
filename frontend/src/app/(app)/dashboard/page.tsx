@@ -77,8 +77,8 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="container mx-auto py-16 flex flex-col items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-10 w-10 animate-spin text-accent mb-4" />
-        <p className="text-muted-foreground font-mono text-sm">Loading Arena Dashboard...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-3" />
+        <p className="text-muted-foreground font-mono text-xs">Loading Dashboard...</p>
       </div>
     );
   }
@@ -91,54 +91,53 @@ export default function DashboardPage() {
   const recentActivity = data?.recent_activity || [];
 
   return (
-    <div className="container mx-auto py-8 px-4 space-y-8 max-w-7xl">
+    <div className="container mx-auto py-6 px-4 space-y-6 max-w-6xl">
       {/* Top Banner: Player Identity & Fast Actions */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1c1335] via-[#211738] to-[#121214] border border-purple-900/40 p-6 md:p-8 shadow-xl">
-        <div className="absolute right-0 top-0 -mt-12 -mr-12 h-64 w-64 rounded-full bg-purple-600/10 blur-3xl pointer-events-none" />
-        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-center gap-5">
-            <Avatar className="h-20 w-20 border-2 border-accent ring-4 ring-purple-900/50 shadow-lg">
+      <div className="relative overflow-hidden rounded-xl bg-card border border-border p-5 sm:p-6 shadow-sm">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-16 w-16 border-2 border-primary/20 ring-4 ring-primary/5 shadow-sm flex-shrink-0">
               <AvatarImage src={user?.avatar} alt={user?.username} />
-              <AvatarFallback className="text-xl font-bold bg-purple-950 text-purple-200">
+              <AvatarFallback className="text-lg font-bold bg-primary/10 text-primary">
                 {user?.username?.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl md:text-3xl font-bold font-headline tracking-tight text-white">
+            <div className="space-y-1 min-w-0">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h1 className="text-xl sm:text-2xl font-bold font-headline tracking-tight text-foreground">
                   {user?.username}
                 </h1>
-                <Badge className="bg-gradient-to-r from-purple-600 to-[#BF00FF] text-white border-0 font-mono font-bold text-xs">
+                <Badge className="bg-primary text-primary-foreground font-mono font-bold text-[10px] px-2 py-0.5">
                   Level {levelInfo?.level || 1}
                 </Badge>
               </div>
-              <p className="text-sm text-purple-200/70 font-mono flex items-center gap-2">
-                <span>Global Rank: <strong className="text-white font-bold">#{user?.global_rank || 1}</strong></span>
+              <p className="text-xs text-muted-foreground font-mono flex items-center gap-2">
+                <span>Global Rank: <strong className="text-foreground font-semibold">#{user?.global_rank || 1}</strong></span>
                 <span>•</span>
-                <span>Elo Rating: <strong className="text-yellow-400 font-bold">{user?.rating || 1000}</strong></span>
+                <span>Elo: <strong className="text-primary font-semibold">{user?.rating || 1000}</strong></span>
               </p>
               {/* XP Progress Bar */}
-              <div className="w-64 sm:w-80 pt-1">
-                <div className="flex justify-between text-xs font-mono text-purple-300/80 mb-1">
+              <div className="w-56 sm:w-72 pt-0.5">
+                <div className="flex justify-between text-[11px] font-mono text-muted-foreground mb-1">
                   <span>Level Progress</span>
                   <span>{levelInfo?.xp_in_level || 0} / {levelInfo?.xp_needed_for_level || 100} XP ({levelInfo?.progress_percentage || 0}%)</span>
                 </div>
-                <Progress value={levelInfo?.progress_percentage || 0} className="h-2 bg-purple-950/80 border border-purple-800/40" />
+                <Progress value={levelInfo?.progress_percentage || 0} className="h-1.5 bg-muted" />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 self-stretch md:self-auto justify-end">
+          <div className="flex flex-wrap items-center gap-2.5 self-stretch md:self-auto justify-end">
             <Link href="/battle">
-              <Button size="lg" className="h-12 px-6 bg-gradient-to-r from-[#4B0082] to-[#BF00FF] hover:from-[#5c00a0] hover:to-[#d000ff] text-white font-bold shadow-lg shadow-purple-900/40 transition-all hover:scale-105">
-                <Swords className="mr-2 h-5 w-5" />
-                Find 1v1 Battle
+              <Button size="sm" className="h-10 px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-sm transition-all">
+                <Swords className="mr-2 h-4 w-4" />
+                1v1 Duel Arena
               </Button>
             </Link>
             <Link href="/practice">
-              <Button size="lg" variant="outline" className="h-12 px-5 border-border bg-card/60 hover:bg-card text-foreground font-semibold">
-                <Code className="mr-2 h-5 w-5 text-accent" />
-                DSA Skill Tree
+              <Button size="sm" variant="outline" className="h-10 px-4 border-border bg-background hover:bg-muted/50 font-semibold text-xs">
+                <Code className="mr-2 h-4 w-4 text-muted-foreground" />
+                DSA Skill Trees
               </Button>
             </Link>
           </div>
@@ -146,123 +145,123 @@ export default function DashboardPage() {
       </div>
 
       {/* Grid of Key Metric Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Streak Card */}
-        <Card className="bg-[#18181b]/80 border-border/80 relative overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="bg-card border-border shadow-xs">
+          <CardHeader className="flex flex-row items-center justify-between pb-1.5 p-4">
             <CardTitle className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Daily Streak</CardTitle>
-            <Flame className="h-4 w-4 text-amber-500 fill-amber-500 animate-pulse" />
+            <Flame className="h-4 w-4 text-amber-500 fill-amber-500" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold font-headline text-amber-400">
-              {user?.streak || 0} <span className="text-sm font-normal text-muted-foreground font-mono">Days</span>
+          <CardContent className="p-4 pt-0">
+            <div className="text-2xl font-bold font-headline text-foreground">
+              {user?.streak || 0} <span className="text-xs font-normal text-muted-foreground font-mono">Days</span>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">Best: {user?.longest_streak || 0} days</p>
+            <p className="text-[11px] text-muted-foreground font-mono mt-0.5">Best: {user?.longest_streak || 0} days</p>
           </CardContent>
         </Card>
 
         {/* Coins Card */}
-        <Card className="bg-[#18181b]/80 border-border/80 relative overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="bg-card border-border shadow-xs">
+          <CardHeader className="flex flex-row items-center justify-between pb-1.5 p-4">
             <CardTitle className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Clash Coins</CardTitle>
-            <Coins className="h-4 w-4 text-yellow-400" />
+            <Coins className="h-4 w-4 text-yellow-500" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold font-headline text-yellow-300">
+          <CardContent className="p-4 pt-0">
+            <div className="text-2xl font-bold font-headline text-foreground">
               {user?.coins || 0}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">+5 per solve • +20 win</p>
+            <p className="text-[11px] text-muted-foreground font-mono mt-0.5">+5 solve • +20 win</p>
           </CardContent>
         </Card>
 
         {/* Solved Problems */}
-        <Card className="bg-[#18181b]/80 border-border/80 relative overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className="bg-card border-border shadow-xs">
+          <CardHeader className="flex flex-row items-center justify-between pb-1.5 p-4">
             <CardTitle className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Problems Solved</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-green-400" />
+            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 pt-0">
             <div className="text-2xl font-bold font-headline text-foreground">
               {user?.solved_breakdown?.total || 0}
             </div>
-            <div className="flex items-center gap-2 text-xs font-mono mt-1">
-              <span className="text-green-400">{user?.solved_breakdown?.easy || 0}E</span>
-              <span className="text-yellow-400">{user?.solved_breakdown?.medium || 0}M</span>
-              <span className="text-red-400">{user?.solved_breakdown?.hard || 0}H</span>
+            <div className="flex items-center gap-2 text-xs font-mono mt-0.5">
+              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{user?.solved_breakdown?.easy || 0}E</span>
+              <span className="text-amber-600 dark:text-amber-400 font-semibold">{user?.solved_breakdown?.medium || 0}M</span>
+              <span className="text-red-600 dark:text-red-400 font-semibold">{user?.solved_breakdown?.hard || 0}H</span>
             </div>
           </CardContent>
         </Card>
 
         {/* Battle Record */}
-        <Card className="bg-[#18181b]/80 border-border/80 relative overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Battle Arena</CardTitle>
-            <Trophy className="h-4 w-4 text-purple-400" />
+        <Card className="bg-card border-border shadow-xs">
+          <CardHeader className="flex flex-row items-center justify-between pb-1.5 p-4">
+            <CardTitle className="text-xs font-mono uppercase tracking-wider text-muted-foreground">1v1 Record</CardTitle>
+            <Trophy className="h-4 w-4 text-primary" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold font-headline text-purple-300">
+          <CardContent className="p-4 pt-0">
+            <div className="text-2xl font-bold font-headline text-foreground">
               {user?.wins || 0}W - {user?.losses || 0}L
             </div>
-            <p className="text-xs text-muted-foreground mt-1">Win Rate: {user?.win_rate || 0}%</p>
+            <p className="text-[11px] text-muted-foreground font-mono mt-0.5">Win Rate: {user?.win_rate || 0}%</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Center 2-Column: Daily Challenge & Recommended Problems */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Daily Challenge Card (1 col) */}
-        <Card className="bg-gradient-to-b from-[#1e1533] to-[#121214] border-purple-800/40 relative overflow-hidden flex flex-col justify-between">
+        <Card className="bg-card border-border shadow-xs flex flex-col justify-between">
           <div>
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-2 p-5">
               <div className="flex items-center justify-between">
-                <Badge className="bg-purple-950 text-purple-300 border border-purple-700/50 font-mono text-xs">
-                  <Sparkles className="mr-1 h-3 w-3 text-accent" />
-                  Daily Quest
+                <Badge variant="outline" className="font-mono text-[10px] text-primary border-primary/30">
+                  <Sparkles className="mr-1 h-3 w-3" />
+                  Daily Challenge
                 </Badge>
-                <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground bg-black/40 px-2 py-0.5 rounded">
-                  <Clock className="h-3 w-3 text-accent" />
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-muted-foreground bg-muted/60 px-2 py-0.5 rounded">
+                  <Clock className="h-3 w-3" />
                   <span>{countdown}</span>
                 </div>
               </div>
-              <CardTitle className="text-xl font-bold font-headline text-white mt-3">
-                {daily?.problem?.title || "Daily DSA Challenge"}
+              <CardTitle className="text-base font-bold font-headline text-foreground mt-2">
+                {daily?.problem?.title || "Daily Algorithmic Quest"}
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground">
-                Solve today's challenge to keep your streak and earn +{daily?.bonus_xp || 30} bonus XP.
+                Maintain your streak and earn +{daily?.bonus_xp || 30} bonus XP.
               </CardDescription>
             </CardHeader>
 
-            <CardContent className="space-y-3">
+            <CardContent className="px-5 pb-3 space-y-2.5">
               <div className="flex items-center gap-2">
-                <Badge variant="outline" className={
+                <Badge variant="outline" className={`text-[10px] font-mono ${
                   daily?.problem?.difficulty === "Hard"
-                    ? "border-red-500/40 text-red-400 bg-red-950/20"
+                    ? "border-red-500/30 text-red-500 bg-red-500/10"
                     : daily?.problem?.difficulty === "Medium"
-                    ? "border-yellow-500/40 text-yellow-400 bg-yellow-950/20"
-                    : "border-green-500/40 text-green-400 bg-green-950/20"
-                }>
+                    ? "border-amber-500/30 text-amber-500 bg-amber-500/10"
+                    : "border-emerald-500/30 text-emerald-500 bg-emerald-500/10"
+                }`}>
                   {daily?.problem?.difficulty || "Easy"}
                 </Badge>
-                <Badge variant="secondary" className="bg-[#202024] text-xs font-mono">
+                <Badge variant="secondary" className="text-[10px] font-mono">
                   {daily?.problem?.category || "Arrays"}
                 </Badge>
               </div>
 
               {daily?.is_solved ? (
-                <div className="flex items-center gap-2 bg-green-950/30 border border-green-500/30 text-green-300 p-3 rounded-lg text-xs font-semibold">
-                  <CheckCircle2 className="h-4 w-4 text-green-400" />
+                <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 p-2.5 rounded-lg text-xs font-semibold">
+                  <CheckCircle2 className="h-4 w-4" />
                   Completed today! Bonus claimed.
                 </div>
               ) : null}
             </CardContent>
           </div>
 
-          <div className="p-6 pt-0">
+          <div className="p-5 pt-0">
             {daily?.problem ? (
               <Link href={`/practice/${daily.problem.id}`}>
-                <Button className="w-full bg-gradient-to-r from-purple-600 to-[#BF00FF] hover:from-purple-700 hover:to-[#A000D8] text-white font-bold">
-                  {daily.is_solved ? "Review Solution" : "Solve Challenge Now"}
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <Button className="w-full h-9 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs">
+                  {daily.is_solved ? "Review Problem" : "Solve Challenge Now"}
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                 </Button>
               </Link>
             ) : null}
@@ -270,54 +269,54 @@ export default function DashboardPage() {
         </Card>
 
         {/* Recommended Problems (2 cols) */}
-        <Card className="lg:col-span-2 bg-[#18181b]/80 border-border/80 flex flex-col justify-between">
+        <Card className="lg:col-span-2 bg-card border-border shadow-xs flex flex-col justify-between">
           <div>
-            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+            <CardHeader className="pb-3 p-5 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-lg font-bold font-headline">Personalized Training</CardTitle>
+                <CardTitle className="text-base font-bold font-headline text-foreground">Recommended Training</CardTitle>
                 <CardDescription className="text-xs">
-                  Targeted problems tailored to reinforce your weak DSA concepts.
+                  Targeted problems tailored to reinforce your DSA skill tree.
                 </CardDescription>
               </div>
               <Link href="/practice">
-                <Button variant="ghost" size="sm" className="text-xs text-accent hover:text-accent/80">
-                  View All <ChevronRight className="h-3.5 w-3.5 ml-1" />
+                <Button variant="ghost" size="sm" className="text-xs text-primary hover:text-primary/80 h-7 px-2">
+                  View Catalog <ChevronRight className="h-3.5 w-3.5 ml-1" />
                 </Button>
               </Link>
             </CardHeader>
 
-            <CardContent className="space-y-2.5">
+            <CardContent className="px-5 pb-4 space-y-2">
               {recommended.map((problem: any) => (
                 <Link
                   key={problem.id}
                   href={`/practice/${problem.id}`}
-                  className="flex items-center justify-between p-3 rounded-lg border border-border/60 bg-[#121214]/60 hover:border-accent hover:bg-[#1a1a20] transition-all group"
+                  className="flex items-center justify-between p-2.5 rounded-lg border border-border bg-muted/20 hover:bg-muted/60 hover:border-border/80 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-md bg-purple-950/40 border border-purple-800/30 flex items-center justify-center font-mono font-bold text-xs text-purple-300">
+                    <div className="h-7 w-7 rounded-md bg-secondary flex items-center justify-center font-mono font-bold text-xs text-foreground">
                       #{problem.level_number || 1}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-sm text-foreground group-hover:text-accent transition-colors">
+                      <h4 className="font-semibold text-xs text-foreground group-hover:text-primary transition-colors">
                         {problem.title}
                       </h4>
-                      <p className="text-xs text-muted-foreground font-mono">
+                      <p className="text-[11px] text-muted-foreground font-mono">
                         {problem.category} • +{problem.xp_reward || 10} XP
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className={
+                    <Badge variant="outline" className={`text-[10px] font-mono ${
                       problem.difficulty === "Hard"
-                        ? "border-red-500/40 text-red-400"
+                        ? "border-red-500/30 text-red-500"
                         : problem.difficulty === "Medium"
-                        ? "border-yellow-500/40 text-yellow-400"
-                        : "border-green-500/40 text-green-400"
-                    }>
+                        ? "border-amber-500/30 text-amber-500"
+                        : "border-emerald-500/30 text-emerald-500"
+                    }`}>
                       {problem.difficulty}
                     </Badge>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
                   </div>
                 </Link>
               ))}
@@ -327,33 +326,33 @@ export default function DashboardPage() {
       </div>
 
       {/* DSA Skill Tree & Mastery Overview */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold font-headline">DSA Roadmap & Concept Mastery</h2>
-            <p className="text-xs text-muted-foreground">
-              Overall Mastery: <strong className="text-accent font-bold">{data?.overall_dsa_progress || 0}%</strong> across 8 core topics
+            <h2 className="text-base sm:text-lg font-bold font-headline text-foreground">DSA Roadmap Mastery</h2>
+            <p className="text-xs text-muted-foreground font-mono">
+              Overall Progress: <strong className="text-primary font-bold">{data?.overall_dsa_progress || 0}%</strong> across 8 core tracks
             </p>
           </div>
           <Link href="/practice">
-            <Button size="sm" variant="outline" className="text-xs font-semibold">
-              Explore Skill Tree
+            <Button size="sm" variant="outline" className="text-xs h-8">
+              Explore Roadmap
             </Button>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {concepts.map((concept: any) => (
-            <Card key={concept.concept_id} className="bg-[#18181b]/70 border-border/80 hover:border-accent/60 transition-all">
-              <CardContent className="p-4 space-y-3">
+            <Card key={concept.concept_id} className="bg-card border-border shadow-xs hover:border-primary/40 transition-all">
+              <CardContent className="p-3.5 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-sm text-foreground">{concept.name}</span>
-                  <span className="text-xs font-mono font-bold text-purple-400">
+                  <span className="font-semibold text-xs text-foreground">{concept.name}</span>
+                  <span className="text-xs font-mono font-bold text-primary">
                     {concept.mastery_percentage}%
                   </span>
                 </div>
-                <Progress value={concept.mastery_percentage} className="h-1.5 bg-secondary" />
-                <div className="flex justify-between text-[11px] font-mono text-muted-foreground">
+                <Progress value={concept.mastery_percentage} className="h-1 bg-muted" />
+                <div className="flex justify-between text-[10px] font-mono text-muted-foreground">
                   <span>Level {concept.current_level} / {concept.total_levels}</span>
                   <span>{concept.solved_problems} solved</span>
                 </div>

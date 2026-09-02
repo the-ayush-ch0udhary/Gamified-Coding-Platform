@@ -1,294 +1,269 @@
 [
   {
-    "level_id": "arrays-level-1",
-    "concept_id": "arrays",
     "level_number": 1,
-    "name": "Level 1: Fundamentals",
-    "description": "Master foundational operations and core syntax patterns.",
+    "name": "Level 1: Array Fundamentals & Lookup",
+    "required_to_unlock": 0,
+    "total_problems": 2,
     "problem_ids": [
       "two-sum",
       "contains-duplicate"
     ],
-    "required_solves": 1,
-    "_id": "498ae107-3d08-44fb-acd9-089877dd0938"
+    "concept_id": "arrays",
+    "_id": "70d96252-5a0b-4fb2-bb75-469ef39ba3b3"
   },
   {
-    "level_id": "arrays-level-2",
-    "concept_id": "arrays",
     "level_number": 2,
-    "name": "Level 2: Intermediate Patterns",
-    "description": "Explore two-pointer, sliding window, and state tracking patterns.",
+    "name": "Level 2: Kadane's & Single Pass Optimization",
+    "required_to_unlock": 1,
+    "total_problems": 2,
     "problem_ids": [
       "maximum-subarray",
       "best-time-to-buy-sell-stock"
     ],
-    "required_solves": 1,
-    "_id": "ebaf3690-f425-40e2-b89a-60fe7dfb97d0"
+    "concept_id": "arrays",
+    "_id": "387d69b5-6ce1-4839-9574-6917e9e5e73d"
   },
   {
-    "level_id": "arrays-level-3",
-    "concept_id": "arrays",
     "level_number": 3,
-    "name": "Level 3: Advanced Challenges",
-    "description": "Tackle complex algorithmic optimization and edge case mastery.",
+    "name": "Level 3: Two Pointers & Area Maximization",
+    "required_to_unlock": 2,
+    "total_problems": 1,
     "problem_ids": [
-      "container-with-most-water",
+      "container-with-most-water"
+    ],
+    "concept_id": "arrays",
+    "_id": "2c964a03-7602-404f-aa01-32b89fc05fb8"
+  },
+  {
+    "level_number": 4,
+    "name": "Level 4: Prefix & Suffix Products",
+    "required_to_unlock": 3,
+    "total_problems": 1,
+    "problem_ids": [
       "product-except-self"
     ],
-    "required_solves": 1,
-    "_id": "df807ab2-d0f6-401c-a75c-48f11364666a"
+    "concept_id": "arrays",
+    "_id": "a8daaeb7-d8ba-471e-a69a-6747950310e7"
   },
   {
-    "level_id": "strings-level-1",
-    "concept_id": "strings",
     "level_number": 1,
-    "name": "Level 1: Fundamentals",
-    "description": "Master foundational operations and core syntax patterns.",
+    "name": "Level 1: Reversals & Character Frequencies",
+    "required_to_unlock": 0,
+    "total_problems": 2,
     "problem_ids": [
-      "valid-palindrome",
-      "reverse-string"
-    ],
-    "required_solves": 1,
-    "_id": "d3fb0498-f312-436c-a030-733e5a1abd40"
-  },
-  {
-    "level_id": "strings-level-2",
-    "concept_id": "strings",
-    "level_number": 2,
-    "name": "Level 2: Intermediate Patterns",
-    "description": "Explore two-pointer, sliding window, and state tracking patterns.",
-    "problem_ids": [
+      "reverse-string",
       "valid-anagram"
     ],
-    "required_solves": 1,
-    "_id": "3a7c5dc2-750c-4ba6-84f2-cfa05dba0426"
-  },
-  {
-    "level_id": "strings-level-3",
     "concept_id": "strings",
-    "level_number": 3,
-    "name": "Level 3: Advanced Challenges",
-    "description": "Tackle complex algorithmic optimization and edge case mastery.",
-    "problem_ids": [
-      "longest-substring"
-    ],
-    "required_solves": 1,
-    "_id": "9faaac95-8ad9-472e-bea3-ad69e8e94981"
+    "_id": "5255cabe-e912-4a48-834d-d55b1533f2ba"
   },
   {
-    "level_id": "linked-lists-level-1",
-    "concept_id": "linked-lists",
+    "level_number": 2,
+    "name": "Level 2: Palindrome Verification & Pointers",
+    "required_to_unlock": 1,
+    "total_problems": 1,
+    "problem_ids": [
+      "valid-palindrome"
+    ],
+    "concept_id": "strings",
+    "_id": "43e58c03-c14b-490d-8dc7-c400c40305ba"
+  },
+  {
+    "level_number": 3,
+    "name": "Level 3: Variable Sliding Window",
+    "required_to_unlock": 2,
+    "total_problems": 1,
+    "problem_ids": [
+      "longest-substring-without-repeating-characters"
+    ],
+    "concept_id": "strings",
+    "_id": "5e3a8dbd-ea37-4bb1-a8b7-238c08d2a39b"
+  },
+  {
     "level_number": 1,
-    "name": "Level 1: Fundamentals",
-    "description": "Master foundational operations and core syntax patterns.",
+    "name": "Level 1: Pointer Iteration & In-Place Reversal",
+    "required_to_unlock": 0,
+    "total_problems": 1,
     "problem_ids": [
       "reverse-linked-list"
     ],
-    "required_solves": 1,
-    "_id": "4f527958-7bfd-4ea7-8b93-e276a607b6ec"
+    "concept_id": "linked-lists",
+    "_id": "bd6e69f8-e594-44e8-aba9-065f7fb96869"
   },
   {
-    "level_id": "linked-lists-level-2",
-    "concept_id": "linked-lists",
     "level_number": 2,
-    "name": "Level 2: Intermediate Patterns",
-    "description": "Explore two-pointer, sliding window, and state tracking patterns.",
+    "name": "Level 2: Merging Sorted Sequences",
+    "required_to_unlock": 1,
+    "total_problems": 1,
     "problem_ids": [
       "merge-two-sorted-lists"
     ],
-    "required_solves": 1,
-    "_id": "2e36b91d-df8b-42e1-97e0-8f4e462b029f"
-  },
-  {
-    "level_id": "linked-lists-level-3",
     "concept_id": "linked-lists",
-    "level_number": 3,
-    "name": "Level 3: Advanced Challenges",
-    "description": "Tackle complex algorithmic optimization and edge case mastery.",
-    "problem_ids": [
-      "container-with-most-water"
-    ],
-    "required_solves": 1,
-    "_id": "aaef3038-e68e-4e74-902a-40e52e675343"
+    "_id": "7ac8e3b5-9122-43d5-aaf8-83820dcc3499"
   },
   {
-    "level_id": "stack-queue-level-1",
-    "concept_id": "stack-queue",
+    "level_number": 3,
+    "name": "Level 3: Fast & Slow Runner Cycle Detection",
+    "required_to_unlock": 2,
+    "total_problems": 1,
+    "problem_ids": [
+      "linked-list-cycle"
+    ],
+    "concept_id": "linked-lists",
+    "_id": "7cb84ade-4b98-4b63-94c7-724ad80cf8c3"
+  },
+  {
     "level_number": 1,
-    "name": "Level 1: Fundamentals",
-    "description": "Master foundational operations and core syntax patterns.",
+    "name": "Level 1: Bracket Matching & LIFO Stack",
+    "required_to_unlock": 0,
+    "total_problems": 1,
     "problem_ids": [
       "valid-parentheses"
     ],
-    "required_solves": 1,
-    "_id": "3b821ec8-1bc2-4021-8d05-62cadbc31cf2"
+    "concept_id": "stack-queue",
+    "_id": "cda14395-b263-4452-a9a3-dc6c4da80f6e"
   },
   {
-    "level_id": "stack-queue-level-2",
-    "concept_id": "stack-queue",
     "level_number": 2,
-    "name": "Level 2: Intermediate Patterns",
-    "description": "Explore two-pointer, sliding window, and state tracking patterns.",
+    "name": "Level 2: Monotonic Stack & Next Greater",
+    "required_to_unlock": 1,
+    "total_problems": 1,
     "problem_ids": [
       "daily-temperatures"
     ],
-    "required_solves": 1,
-    "_id": "995d8acb-7d01-4193-89ce-df4f3958db25"
-  },
-  {
-    "level_id": "stack-queue-level-3",
     "concept_id": "stack-queue",
+    "_id": "61e1565b-09bc-4c2b-8832-a40c571d1d18"
+  },
+  {
     "level_number": 3,
-    "name": "Level 3: Advanced Challenges",
-    "description": "Tackle complex algorithmic optimization and edge case mastery.",
+    "name": "Level 3: Two-Pointer Monotonic Elevation",
+    "required_to_unlock": 2,
+    "total_problems": 1,
     "problem_ids": [
-      "container-with-most-water"
+      "trapping-rain-water"
     ],
-    "required_solves": 1,
-    "_id": "95002fac-7fbc-4824-96cd-a62fe9e68880"
+    "concept_id": "stack-queue",
+    "_id": "d8d8bf57-a1ea-4131-aa4e-d58454edd03d"
   },
   {
-    "level_id": "trees-level-1",
-    "concept_id": "trees",
     "level_number": 1,
-    "name": "Level 1: Fundamentals",
-    "description": "Master foundational operations and core syntax patterns.",
-    "problem_ids": [
-      "maximum-depth-binary-tree"
-    ],
-    "required_solves": 1,
-    "_id": "9346af81-ecf6-4c7e-a483-fff2c45145b0"
-  },
-  {
-    "level_id": "trees-level-2",
-    "concept_id": "trees",
-    "level_number": 2,
-    "name": "Level 2: Intermediate Patterns",
-    "description": "Explore two-pointer, sliding window, and state tracking patterns.",
+    "name": "Level 1: Recursive Tree Transformation",
+    "required_to_unlock": 0,
+    "total_problems": 1,
     "problem_ids": [
       "invert-binary-tree"
     ],
-    "required_solves": 1,
-    "_id": "7e9eeb72-11fb-46f2-b1d7-2cfbd1a26f9c"
-  },
-  {
-    "level_id": "trees-level-3",
     "concept_id": "trees",
-    "level_number": 3,
-    "name": "Level 3: Advanced Challenges",
-    "description": "Tackle complex algorithmic optimization and edge case mastery.",
-    "problem_ids": [
-      "container-with-most-water"
-    ],
-    "required_solves": 1,
-    "_id": "732a0865-9e03-4865-a8f5-627ae16ef4bb"
+    "_id": "f7624c07-c8f6-4b8a-971b-1d8d102eeeb1"
   },
   {
-    "level_id": "graphs-level-1",
-    "concept_id": "graphs",
+    "level_number": 2,
+    "name": "Level 2: Depth & Diameter Computation",
+    "required_to_unlock": 1,
+    "total_problems": 1,
+    "problem_ids": [
+      "maximum-depth-of-binary-tree"
+    ],
+    "concept_id": "trees",
+    "_id": "15a1d7c0-c924-4591-96d0-1145591c5e2e"
+  },
+  {
+    "level_number": 3,
+    "name": "Level 3: BST Invariant Validation",
+    "required_to_unlock": 2,
+    "total_problems": 1,
+    "problem_ids": [
+      "validate-binary-search-tree"
+    ],
+    "concept_id": "trees",
+    "_id": "3457e052-6ba8-454e-a84d-a4181991ae47"
+  },
+  {
     "level_number": 1,
-    "name": "Level 1: Fundamentals",
-    "description": "Master foundational operations and core syntax patterns.",
+    "name": "Level 1: Matrix Connected Components & Flood Fill",
+    "required_to_unlock": 0,
+    "total_problems": 1,
     "problem_ids": [
       "number-of-islands"
     ],
-    "required_solves": 1,
-    "_id": "d78b6c76-8702-4fbf-a366-dd20a66fa752"
+    "concept_id": "graphs",
+    "_id": "883106a6-52f0-44f1-9e47-b4f41ed6085f"
   },
   {
-    "level_id": "graphs-level-2",
-    "concept_id": "graphs",
     "level_number": 2,
-    "name": "Level 2: Intermediate Patterns",
-    "description": "Explore two-pointer, sliding window, and state tracking patterns.",
+    "name": "Level 2: Breadth-First Multi-Source Waves",
+    "required_to_unlock": 1,
+    "total_problems": 1,
     "problem_ids": [
-      "maximum-subarray"
+      "rotting-oranges"
     ],
-    "required_solves": 1,
-    "_id": "5ff8a307-084f-4f64-941a-15c6f66e9f8f"
-  },
-  {
-    "level_id": "graphs-level-3",
     "concept_id": "graphs",
-    "level_number": 3,
-    "name": "Level 3: Advanced Challenges",
-    "description": "Tackle complex algorithmic optimization and edge case mastery.",
-    "problem_ids": [
-      "container-with-most-water"
-    ],
-    "required_solves": 1,
-    "_id": "19ae7861-53c8-40fa-8e7e-af6a37ab96f1"
+    "_id": "9cae454b-38e7-47d8-bc85-29521743d122"
   },
   {
-    "level_id": "dynamic-programming-level-1",
-    "concept_id": "dynamic-programming",
+    "level_number": 3,
+    "name": "Level 3: Directed Cycle Detection & Kahn's Algorithm",
+    "required_to_unlock": 2,
+    "total_problems": 1,
+    "problem_ids": [
+      "course-schedule"
+    ],
+    "concept_id": "graphs",
+    "_id": "4a282da3-a267-4193-b55c-1812265cdcdf"
+  },
+  {
     "level_number": 1,
-    "name": "Level 1: Fundamentals",
-    "description": "Master foundational operations and core syntax patterns.",
+    "name": "Level 1: 1D Recurrence & Fibonacci Sequences",
+    "required_to_unlock": 0,
+    "total_problems": 1,
     "problem_ids": [
       "climbing-stairs"
     ],
-    "required_solves": 1,
-    "_id": "15f6f162-c150-413c-8c55-b93ac8a44e28"
+    "concept_id": "dynamic-programming",
+    "_id": "1e59ea71-edb5-4059-ae84-0d4a4ef3bdb6"
   },
   {
-    "level_id": "dynamic-programming-level-2",
-    "concept_id": "dynamic-programming",
     "level_number": 2,
-    "name": "Level 2: Intermediate Patterns",
-    "description": "Explore two-pointer, sliding window, and state tracking patterns.",
-    "problem_ids": [
-      "house-robber"
-    ],
-    "required_solves": 1,
-    "_id": "4459652c-c2cc-4680-b08b-43b26a291a58"
-  },
-  {
-    "level_id": "dynamic-programming-level-3",
-    "concept_id": "dynamic-programming",
-    "level_number": 3,
-    "name": "Level 3: Advanced Challenges",
-    "description": "Tackle complex algorithmic optimization and edge case mastery.",
+    "name": "Level 2: Unbounded Knapsack & Minimum Coins",
+    "required_to_unlock": 1,
+    "total_problems": 1,
     "problem_ids": [
       "coin-change"
     ],
-    "required_solves": 1,
-    "_id": "482aec79-3b87-4c51-97ae-46a6e41c5c4a"
+    "concept_id": "dynamic-programming",
+    "_id": "ba5ca1b8-55a8-4aa8-82c6-a5867b83c4e1"
   },
   {
-    "level_id": "greedy-level-1",
-    "concept_id": "greedy",
+    "level_number": 3,
+    "name": "Level 3: 2D Subsequence Alignment",
+    "required_to_unlock": 2,
+    "total_problems": 1,
+    "problem_ids": [
+      "longest-common-subsequence"
+    ],
+    "concept_id": "dynamic-programming",
+    "_id": "bf65f6fb-f313-4534-b8fe-3153d7cc1e28"
+  },
+  {
     "level_number": 1,
-    "name": "Level 1: Fundamentals",
-    "description": "Master foundational operations and core syntax patterns.",
+    "name": "Level 1: Farthest Reachability Simulation",
+    "required_to_unlock": 0,
+    "total_problems": 1,
     "problem_ids": [
       "jump-game"
     ],
-    "required_solves": 1,
-    "_id": "9a71c2d5-d499-42a5-b948-cf5cfa800078"
+    "concept_id": "greedy",
+    "_id": "03a4d672-e97f-44ba-8966-1d363fb4ff70"
   },
   {
-    "level_id": "greedy-level-2",
-    "concept_id": "greedy",
     "level_number": 2,
-    "name": "Level 2: Intermediate Patterns",
-    "description": "Explore two-pointer, sliding window, and state tracking patterns.",
+    "name": "Level 2: Circular Balance & Deficit Tracking",
+    "required_to_unlock": 1,
+    "total_problems": 1,
     "problem_ids": [
-      "maximum-subarray"
+      "gas-station"
     ],
-    "required_solves": 1,
-    "_id": "c9bf9ba2-a344-4c0c-bbbe-fc2ee1b91c68"
-  },
-  {
-    "level_id": "greedy-level-3",
     "concept_id": "greedy",
-    "level_number": 3,
-    "name": "Level 3: Advanced Challenges",
-    "description": "Tackle complex algorithmic optimization and edge case mastery.",
-    "problem_ids": [
-      "container-with-most-water"
-    ],
-    "required_solves": 1,
-    "_id": "3ce3d80d-c4b8-48be-ba0c-f3c2226365f7"
+    "_id": "69624d60-ef39-4ee4-a361-b8ca112a0fe0"
   }
 ]

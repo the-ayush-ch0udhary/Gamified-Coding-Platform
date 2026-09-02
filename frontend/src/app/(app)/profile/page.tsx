@@ -112,8 +112,8 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="container mx-auto py-16 flex flex-col items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-10 w-10 animate-spin text-accent mb-4" />
-        <p className="text-muted-foreground font-mono text-sm">Loading Competitive Profile...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-3" />
+        <p className="text-muted-foreground font-mono text-xs">Loading Profile...</p>
       </div>
     );
   }
@@ -122,77 +122,86 @@ export default function ProfilePage() {
   const masteryConcepts = profile?.mastery_info?.concepts || [];
 
   return (
-    <div className="container mx-auto py-8 px-4 space-y-8 max-w-6xl">
+    <div className="container mx-auto py-6 px-4 space-y-6 max-w-6xl">
       {/* Profile Header Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1c1335] via-[#211738] to-[#121214] border border-purple-900/40 p-6 md:p-8 shadow-xl">
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-          <Avatar className="h-24 w-24 border-3 border-accent ring-4 ring-purple-900/40 shadow-xl">
+      <div className="relative overflow-hidden rounded-xl bg-card border border-border p-6 shadow-xs">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-5">
+          <Avatar className="h-20 w-20 border-2 border-primary/20 ring-4 ring-primary/5 shadow-xs">
             <AvatarImage src={profile?.avatar} />
-            <AvatarFallback className="text-2xl font-bold bg-purple-950 text-purple-200">
+            <AvatarFallback className="text-xl font-bold bg-primary/10 text-primary">
               {profile?.username?.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
 
-          <div className="space-y-2 flex-1 text-center md:text-left">
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-              <h1 className="text-3xl font-bold font-headline text-white">{profile?.username}</h1>
-              <Badge className="bg-gradient-to-r from-purple-600 to-[#BF00FF] text-white border-0 font-mono text-xs">
+          <div className="space-y-1.5 flex-1 text-center md:text-left">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
+              <h1 className="text-2xl sm:text-3xl font-bold font-headline text-foreground">{profile?.username}</h1>
+              <Badge className="bg-primary text-primary-foreground font-mono text-xs">
                 Level {levelInfo?.level || 1}
               </Badge>
             </div>
-            <p className="text-sm text-muted-foreground">{profile?.email}</p>
+            <p className="text-xs text-muted-foreground font-mono">{profile?.email}</p>
 
             {/* XP Progress Bar */}
-            <div className="w-full max-w-md pt-2">
-              <div className="flex justify-between text-xs font-mono text-purple-300 mb-1">
+            <div className="w-full max-w-md pt-1">
+              <div className="flex justify-between text-xs font-mono text-muted-foreground mb-1">
                 <span>XP Progress</span>
                 <span>{levelInfo?.xp_in_level || 0} / {levelInfo?.xp_needed_for_level || 100} XP ({levelInfo?.progress_percentage || 0}%)</span>
               </div>
-              <Progress value={levelInfo?.progress_percentage || 0} className="h-2 bg-purple-950 border border-purple-800/40" />
+              <Progress value={levelInfo?.progress_percentage || 0} className="h-1.5 bg-muted" />
             </div>
           </div>
 
-          {/* Quick Stats Box */}
-          <div className="grid grid-cols-3 gap-3 bg-[#121214]/80 p-4 rounded-xl border border-border/80 text-center font-mono w-full md:w-auto">
-            <div>
-              <span className="text-[10px] text-muted-foreground uppercase">Elo Rating</span>
-              <p className="text-lg font-bold font-headline text-yellow-400">{profile?.rating || 1000}</p>
+          <div className="grid grid-cols-3 gap-2.5 w-full md:w-auto text-center font-mono">
+            <div className="p-3 rounded-lg bg-muted/40 border border-border">
+              <span className="text-[10px] uppercase text-muted-foreground">Rating</span>
+              <p className="text-xl font-bold text-primary font-headline">{profile?.rating || 1000}</p>
             </div>
-            <div>
-              <span className="text-[10px] text-muted-foreground uppercase">Streak</span>
-              <p className="text-lg font-bold font-headline text-amber-400">🔥 {profile?.streak || 0}</p>
+            <div className="p-3 rounded-lg bg-muted/40 border border-border">
+              <span className="text-[10px] uppercase text-muted-foreground">Streak</span>
+              <p className="text-xl font-bold text-amber-600 dark:text-amber-400 font-headline">🔥 {profile?.streak || 0}</p>
             </div>
-            <div>
-              <span className="text-[10px] text-muted-foreground uppercase">Coins</span>
-              <p className="text-lg font-bold font-headline text-yellow-300">🪙 {profile?.coins || 0}</p>
+            <div className="p-3 rounded-lg bg-muted/40 border border-border">
+              <span className="text-[10px] uppercase text-muted-foreground">Coins</span>
+              <p className="text-xl font-bold text-yellow-600 dark:text-yellow-400 font-headline">🪙 {profile?.coins || 0}</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Profile Tabs */}
-      <Tabs defaultValue="mastery" className="space-y-6">
-        <TabsList className="bg-[#18181b] border border-border p-1">
-          <TabsTrigger value="mastery" className="text-xs">DSA Concept Mastery</TabsTrigger>
-          <TabsTrigger value="badges" className="text-xs">Achievements & Badges ({badges.filter(b => b.unlocked).length})</TabsTrigger>
-          <TabsTrigger value="battles" className="text-xs">Battle Logs ({battleHistory.length})</TabsTrigger>
+      {/* Tabs for Badges, Settings, Mastery */}
+      <Tabs defaultValue="badges" className="space-y-4">
+        <TabsList className="bg-muted/60 border border-border h-9">
+          <TabsTrigger value="badges" className="text-xs">Achievements & Badges ({badges.length})</TabsTrigger>
+          <TabsTrigger value="mastery" className="text-xs">Concept Mastery</TabsTrigger>
           <TabsTrigger value="settings" className="text-xs">Account Settings</TabsTrigger>
         </TabsList>
 
-        {/* TAB 1: DSA CONCEPT MASTERY */}
-        <TabsContent value="mastery" className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {masteryConcepts.map((c: any) => (
-              <Card key={c.concept_id} className="bg-[#18181b]/80 border-border/80">
-                <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                  <CardTitle className="text-sm font-bold font-headline">{c.name}</CardTitle>
-                  <span className="text-xs font-mono font-bold text-accent">{c.mastery_percentage}%</span>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <Progress value={c.mastery_percentage} className="h-1.5 bg-secondary" />
-                  <div className="flex justify-between text-[11px] font-mono text-muted-foreground">
-                    <span>Level {c.current_level} / {c.total_levels}</span>
-                    <span>{c.solved_problems} solved</span>
+        {/* Badges Tab */}
+        <TabsContent value="badges" className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+            {badges.map((b) => (
+              <Card key={b.id || b.name} className={`bg-card border-border shadow-xs ${!b.is_unlocked ? "opacity-60" : ""}`}>
+                <CardContent className="p-4 flex items-start gap-3.5">
+                  <div className={`h-11 w-11 rounded-lg flex items-center justify-center text-xl flex-shrink-0 border ${
+                    b.is_unlocked ? "bg-primary/10 border-primary/20 text-primary" : "bg-muted border-border text-muted-foreground"
+                  }`}>
+                    {b.icon || "🏆"}
+                  </div>
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <h4 className="font-bold text-xs text-foreground truncate">{b.name}</h4>
+                      {b.is_unlocked ? (
+                        <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[9px] font-mono py-0">
+                          Unlocked
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-[9px] font-mono py-0">
+                          <Lock className="h-2 w-2 mr-0.5" /> Locked
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">{b.description}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -200,121 +209,65 @@ export default function ProfilePage() {
           </div>
         </TabsContent>
 
-        {/* TAB 2: ACHIEVEMENTS & BADGES */}
-        <TabsContent value="badges" className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {badges.map((badge: any) => (
-              <Card
-                key={badge.badge_id}
-                className={`transition-all p-5 flex flex-col items-center text-center space-y-3 ${
-                  badge.unlocked
-                    ? "bg-[#1e1533]/80 border-accent/60 shadow-lg shadow-purple-950/20"
-                    : "bg-[#151518]/40 border-border/40 opacity-50"
-                }`}
-              >
-                <div className={`h-14 w-14 rounded-2xl flex items-center justify-center border-2 ${
-                  badge.unlocked
-                    ? "bg-accent/20 border-accent text-accent"
-                    : "bg-secondary/40 border-border text-muted-foreground"
-                }`}>
-                  {badge.unlocked ? <Award className="h-7 w-7" /> : <Lock className="h-6 w-6" />}
-                </div>
-
-                <div className="space-y-1">
-                  <h3 className="font-bold text-sm text-white">{badge.name}</h3>
-                  <p className="text-xs text-muted-foreground line-clamp-2">{badge.description}</p>
-                </div>
-
-                {badge.unlocked ? (
-                  <Badge className="bg-green-950 text-green-300 border-green-500/30 text-[10px] font-mono">
-                    <CheckCircle2 className="mr-1 h-3 w-3 text-green-400" />
-                    Unlocked
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="text-[10px] font-mono text-muted-foreground border-border">
-                    Locked
-                  </Badge>
-                )}
+        {/* Mastery Tab */}
+        <TabsContent value="mastery" className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            {masteryConcepts.map((c: any) => (
+              <Card key={c.concept_id} className="bg-card border-border shadow-xs">
+                <CardContent className="p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-xs text-foreground">{c.name}</span>
+                    <span className="text-xs font-mono font-bold text-primary">{c.mastery_percentage}%</span>
+                  </div>
+                  <Progress value={c.mastery_percentage} className="h-1.5 bg-muted" />
+                  <p className="text-[10px] text-muted-foreground font-mono">
+                    {c.solved_problems} / {c.total_problems} Solved (Level {c.current_level})
+                  </p>
+                </CardContent>
               </Card>
             ))}
           </div>
         </TabsContent>
 
-        {/* TAB 3: BATTLE HISTORY LOGS */}
-        <TabsContent value="battles" className="space-y-4">
-          <div className="rounded-xl border border-border/80 bg-[#18181b]/80 overflow-hidden">
-            {battleHistory.map((b, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between p-4 border-b border-border/40 last:border-0 hover:bg-secondary/30 transition-colors text-xs font-mono"
-              >
-                <div className="flex items-center gap-3">
-                  <span className={`font-bold px-2 py-0.5 rounded uppercase text-[10px] ${
-                    b.result === "win"
-                      ? "bg-green-950 text-green-400 border border-green-500/40"
-                      : b.result === "draw"
-                      ? "bg-yellow-950 text-yellow-400 border border-yellow-500/40"
-                      : "bg-red-950 text-red-400 border border-red-500/40"
-                  }`}>
-                    {b.result}
-                  </span>
-                  <span className="font-semibold text-foreground text-sm">vs {b.opponent_name || "Opponent"}</span>
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <span className={b.rating_delta >= 0 ? "text-green-400 font-bold" : "text-red-400 font-bold"}>
-                    {b.rating_delta >= 0 ? `+${b.rating_delta}` : b.rating_delta} Elo
-                  </span>
-                  <span className="text-muted-foreground">{b.start_time ? new Date(b.start_time).toLocaleDateString() : "Recent"}</span>
-                </div>
-              </div>
-            ))}
-
-            {battleHistory.length === 0 && (
-              <div className="text-center py-12 text-muted-foreground text-xs font-mono">
-                No battles completed yet.
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        {/* TAB 4: ACCOUNT SETTINGS */}
-        <TabsContent value="settings" className="space-y-6">
-          <Card className="bg-[#18181b]/80 border-border/80 max-w-xl">
-            <CardHeader>
-              <CardTitle className="text-lg font-bold font-headline">Profile Information</CardTitle>
-              <CardDescription className="text-xs">Update your display name and optional custom API settings.</CardDescription>
+        {/* Settings Tab */}
+        <TabsContent value="settings" className="space-y-4">
+          <Card className="bg-card border-border shadow-xs max-w-2xl">
+            <CardHeader className="p-5 pb-3">
+              <CardTitle className="text-base font-bold font-headline text-foreground">Profile & API Configuration</CardTitle>
+              <CardDescription className="text-xs text-muted-foreground">
+                Configure your custom Gemini API key for unlimited AI explanations.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
+            <CardContent className="p-5 pt-0 space-y-4">
+              <div className="space-y-1.5">
                 <Label className="text-xs">Display Name</Label>
                 <Input
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="bg-[#121214] border-border text-xs"
+                  className="bg-background border-border text-xs h-9"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-xs">Optional Custom Gemini API Key</Label>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Custom Gemini API Key (Optional)</Label>
                 <Input
                   type="password"
-                  placeholder="Optional custom key (server key is used by default)"
+                  placeholder="AIzaSy..."
                   value={geminiKey}
                   onChange={(e) => setGeminiKey(e.target.value)}
-                  className="bg-[#121214] border-border text-xs"
+                  className="bg-background border-border text-xs h-9 font-mono"
                 />
                 <p className="text-[11px] text-muted-foreground">
-                  The server already provides built-in AI code explanation. You can optionally supply your personal key.
+                  If provided, your personal key will be used for AI code explanations.
                 </p>
               </div>
 
               <Button
                 onClick={handleSaveProfile}
                 disabled={saving}
-                className="bg-accent hover:bg-accent/90 text-white font-bold text-xs"
+                className="h-8 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
               >
-                {saving ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <Save className="mr-2 h-3.5 w-3.5" />}
+                {saving ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Save className="mr-1.5 h-3.5 w-3.5" />}
                 Save Changes
               </Button>
             </CardContent>

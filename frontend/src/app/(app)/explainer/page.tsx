@@ -80,25 +80,38 @@ export default function ExplainerPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 space-y-8 max-w-6xl">
+    <div className="container mx-auto py-6 px-4 space-y-6 max-w-6xl">
       {/* Top Banner */}
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-950/40 px-3.5 py-1 text-xs font-mono text-purple-300">
-          <BotMessageSquare className="h-3.5 w-3.5 text-accent" />
-          <span>Server-Side Algorithmic AI Coach</span>
+      <div className="text-center space-y-2">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-0.5 text-xs font-mono text-primary">
+          <BotMessageSquare className="h-3.5 w-3.5" />
+          <span>Algorithmic Code Coach</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">
+        <h1 className="text-3xl md:text-4xl font-bold font-headline tracking-tight text-foreground">
           AI Code Explainer
         </h1>
-        <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-          Get staff-engineer-grade line-by-line breakdowns, asymptotic time & space complexity, pattern detection, and optimization recommendations.
+        <p className="text-muted-foreground text-xs sm:text-sm max-w-lg mx-auto">
+          Get line-by-line breakdowns, asymptotic time & space complexity, pattern detection, and optimization recommendations.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[500px]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 min-h-[500px]">
         {/* Left Column: Monaco Code Editor Input */}
-        <div className="flex flex-col space-y-4">
-          <div className="flex-1 rounded-xl border border-border overflow-hidden flex flex-col">
+        <div className="flex flex-col space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">Source Code Snippet</span>
+            <Button
+              size="sm"
+              onClick={handleExplainCode}
+              disabled={loading}
+              className="h-8 px-4 text-xs font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
+            >
+              {loading ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Sparkles className="mr-1.5 h-3.5 w-3.5" />}
+              Analyze Code
+            </Button>
+          </div>
+
+          <div className="flex-1 min-h-[420px] rounded-lg border border-border overflow-hidden">
             <MonacoCodeEditor
               code={code}
               onChange={setCode}
@@ -107,74 +120,52 @@ export default function ExplainerPage() {
               onReset={() => setCode(DEFAULT_SNIPPET)}
             />
           </div>
-
-          <Button
-            size="lg"
-            onClick={handleExplainCode}
-            disabled={loading}
-            className="w-full h-12 text-sm font-bold bg-gradient-to-r from-purple-600 to-[#BF00FF] hover:from-purple-700 text-white shadow-lg shadow-purple-900/30"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Analyzing Algorithm & Complexity...
-              </>
-            ) : (
-              <>
-                <Sparkles className="mr-2 h-4 w-4" />
-                Explain Code & Analyze Complexity
-              </>
-            )}
-          </Button>
-
-          {error && (
-            <div className="p-3 rounded-lg bg-red-950/30 border border-red-500/30 text-red-400 text-xs font-mono">
-              {error}
-            </div>
-          )}
         </div>
 
-        {/* Right Column: AI Explanation Output */}
-        <Card className="bg-[#18181b]/80 border-border/80 flex flex-col justify-between overflow-hidden">
-          <CardHeader className="pb-3 border-b border-border/40 bg-[#151518] flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-base font-bold font-headline flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-accent" />
-                Algorithmic Breakdown
-              </CardTitle>
-            </div>
-
+        {/* Right Column: AI Analysis Report Output */}
+        <div className="flex flex-col space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-muted-foreground">Algorithmic Breakdown</span>
             {explanation && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleCopy}
-                className="h-7 text-xs text-muted-foreground hover:text-foreground"
+                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
               >
-                {copied ? <Check className="h-3.5 w-3.5 mr-1 text-green-400" /> : <Copy className="h-3.5 w-3.5 mr-1" />}
+                {copied ? <Check className="h-3.5 w-3.5 mr-1 text-emerald-500" /> : <Copy className="h-3.5 w-3.5 mr-1" />}
                 {copied ? "Copied" : "Copy"}
               </Button>
             )}
-          </CardHeader>
+          </div>
 
-          <CardContent className="p-5 flex-1 overflow-y-auto">
-            {loading ? (
-              <div className="h-full flex flex-col items-center justify-center py-24 gap-3 text-muted-foreground font-mono text-xs">
-                <Loader2 className="h-8 w-8 animate-spin text-accent" />
-                <span>Generating line-by-line explanation and Big-O analysis...</span>
-              </div>
-            ) : explanation ? (
-              <div className="prose prose-invert max-w-none text-xs leading-relaxed font-mono whitespace-pre-wrap text-foreground/90">
-                {explanation}
-              </div>
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center py-24 text-center space-y-3 text-muted-foreground font-mono text-xs">
-                <BotMessageSquare className="h-10 w-10 text-accent opacity-50 mx-auto" />
-                <p>Paste or write code in the editor on the left and click "Explain Code".</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          <Card className="flex-1 min-h-[420px] bg-card border-border shadow-xs flex flex-col justify-between overflow-hidden">
+            <CardContent className="p-4 sm:p-5 flex-1 overflow-y-auto text-xs sm:text-sm leading-relaxed">
+              {loading ? (
+                <div className="flex flex-col items-center justify-center h-full min-h-[300px] gap-3 text-muted-foreground font-mono text-xs">
+                  <Loader2 className="h-7 w-7 animate-spin text-primary" />
+                  <span>Parsing AST, calculating complexities, evaluating edge cases...</span>
+                </div>
+              ) : error ? (
+                <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs space-y-1">
+                  <p className="font-bold flex items-center gap-1.5"><AlertCircle className="h-4 w-4" /> Analysis Error</p>
+                  <p>{error}</p>
+                </div>
+              ) : explanation ? (
+                <div className="prose dark:prose-invert max-w-none text-xs leading-relaxed">
+                  <div className="p-4 rounded-lg bg-muted/30 border border-border whitespace-pre-wrap font-mono">
+                    {explanation}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center text-muted-foreground font-mono text-xs space-y-2 p-6">
+                  <BotMessageSquare className="h-8 w-8 text-primary opacity-60" />
+                  <p>Paste any algorithm or data structure snippet on the left and click "Analyze Code".</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

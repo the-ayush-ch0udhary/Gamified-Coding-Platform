@@ -32,12 +32,12 @@ import { getApiUrl, getAuthToken, getWsUrl, isAuthenticated } from "@/lib/auth";
 import type { User } from "@/lib/types";
 
 const RANK_TIERS = [
-  { name: "Grandmaster", minElo: 1500, color: "text-amber-400 border-amber-500/40 bg-amber-950/20", icon: Crown },
-  { name: "Diamond", minElo: 1300, color: "text-cyan-400 border-cyan-500/40 bg-cyan-950/20", icon: Sparkles },
-  { name: "Platinum", minElo: 1150, color: "text-purple-400 border-purple-500/40 bg-purple-950/20", icon: Shield },
-  { name: "Gold", minElo: 1000, color: "text-yellow-400 border-yellow-500/40 bg-yellow-950/20", icon: Trophy },
-  { name: "Silver", minElo: 850, color: "text-slate-300 border-slate-400/40 bg-slate-900/20", icon: Target },
-  { name: "Bronze", minElo: 0, color: "text-amber-700 border-amber-800/40 bg-amber-950/10", icon: Target },
+  { name: "Grandmaster", minElo: 1500, color: "text-amber-500 border-amber-500/30 bg-amber-500/10", icon: Crown },
+  { name: "Diamond", minElo: 1300, color: "text-cyan-500 border-cyan-500/30 bg-cyan-500/10", icon: Sparkles },
+  { name: "Platinum", minElo: 1150, color: "text-purple-500 border-purple-500/30 bg-purple-500/10", icon: Shield },
+  { name: "Gold", minElo: 1000, color: "text-yellow-600 dark:text-yellow-400 border-yellow-500/30 bg-yellow-500/10", icon: Trophy },
+  { name: "Silver", minElo: 850, color: "text-slate-600 dark:text-slate-300 border-slate-400/30 bg-slate-500/10", icon: Target },
+  { name: "Bronze", minElo: 0, color: "text-amber-700 dark:text-amber-600 border-amber-700/30 bg-amber-700/10", icon: Target },
 ];
 
 export default function BattleLobbyPage() {
@@ -48,6 +48,7 @@ export default function BattleLobbyPage() {
   const [queueTime, setQueueTime] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [matchedOpponent, setMatchedOpponent] = useState<any>(null);
+  const [isBotStarting, setIsBotStarting] = useState<boolean>(false);
 
   const wsRef = useRef<WebSocket | null>(null);
   const queueTimerRef = useRef<any>(null);
@@ -123,7 +124,7 @@ export default function BattleLobbyPage() {
 
           setTimeout(() => {
             router.push(`/battle/${data.battle_id}`);
-          }, 2000);
+          }, 1500);
         }
       } catch (e) {
         console.error("Matchmaking WS parse error:", e);
@@ -152,6 +153,8 @@ export default function BattleLobbyPage() {
   };
 
   const startInstantBotDuel = async () => {
+    if (isBotStarting) return;
+    setIsBotStarting(true);
     try {
       const token = getAuthToken();
       const res = await fetch(`${getApiUrl()}/api/battle/create`, {
@@ -177,6 +180,7 @@ export default function BattleLobbyPage() {
       }
     } catch (e) {
       console.error("Failed to start bot duel:", e);
+      setIsBotStarting(false);
     }
   };
 
@@ -186,8 +190,8 @@ export default function BattleLobbyPage() {
   if (loading) {
     return (
       <div className="container mx-auto py-16 flex flex-col items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-10 w-10 animate-spin text-accent mb-4" />
-        <p className="text-muted-foreground font-mono text-sm">Connecting to 1v1 Battle Arena...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-3" />
+        <p className="text-muted-foreground font-mono text-xs">Connecting to 1v1 Arena...</p>
       </div>
     );
   }
@@ -199,37 +203,36 @@ export default function BattleLobbyPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 space-y-8 max-w-6xl">
+    <div className="container mx-auto py-6 px-4 space-y-6 max-w-6xl">
       {/* High-Impact Arena Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1f1035] via-[#161226] to-[#0d0d12] border border-purple-800/40 p-8 shadow-2xl">
-        <div className="absolute right-0 top-0 -mt-10 -mr-10 h-72 w-72 rounded-full bg-purple-600/15 blur-3xl pointer-events-none" />
-        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/40 bg-purple-950/60 px-3.5 py-1 text-xs font-mono text-purple-300">
-              <Swords className="h-3.5 w-3.5 text-accent animate-pulse" />
-              <span>Ranked Competitive Duel Arena</span>
+      <div className="relative overflow-hidden rounded-xl bg-card border border-border p-6 sm:p-7 shadow-sm">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-1.5 text-center md:text-left">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-0.5 text-xs font-mono text-primary">
+              <Swords className="h-3.5 w-3.5" />
+              <span>Ranked Competitive Arena</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-black font-headline tracking-tight text-white">
-              1v1 Battle Arena
+            <h1 className="text-2xl sm:text-3xl font-bold font-headline tracking-tight text-foreground">
+              1v1 Code Duel Arena
             </h1>
-            <p className="text-muted-foreground text-sm max-w-lg leading-relaxed">
-              Real-time synchronized coding duels with server-authoritative Elo matchmaking (+25 / -15). First to pass all test cases takes the crown.
+            <p className="text-muted-foreground text-xs sm:text-sm max-w-lg leading-relaxed">
+              Real-time synchronized coding duels with server-authoritative Elo ratings. First to solve passes all test cases to win.
             </p>
           </div>
 
           {/* User Tier & Rating Card */}
-          <div className="flex items-center gap-4 bg-[#121216]/90 border border-purple-900/50 p-4 rounded-xl shadow-xl backdrop-blur-md">
-            <div className="h-14 w-14 rounded-xl bg-purple-950/80 border border-purple-700/50 flex items-center justify-center text-yellow-400">
-              <TierIcon className="h-8 w-8" />
+          <div className="flex items-center gap-4 bg-muted/30 border border-border p-3.5 rounded-xl shadow-xs">
+            <div className="h-12 w-12 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+              <TierIcon className="h-6 w-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-base text-white">{currentTier.name}</span>
+                <span className="font-bold text-sm text-foreground">{currentTier.name}</span>
                 <Badge className={`text-[10px] font-mono ${currentTier.color}`}>
                   {user?.rating || 1000} Elo
                 </Badge>
               </div>
-              <p className="text-xs font-mono text-muted-foreground mt-0.5">
+              <p className="text-[11px] font-mono text-muted-foreground mt-0.5">
                 {user?.wins || 0}W - {user?.losses || 0}L ({roundWinRate(user?.wins || 0, user?.losses || 0)}% Win Rate)
               </p>
             </div>
@@ -237,34 +240,34 @@ export default function BattleLobbyPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* LEFT 2 COLS: Matchmaking & Mode Select Console */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="bg-[#18181c]/90 border-purple-900/40 relative overflow-hidden shadow-2xl p-6 sm:p-8">
+          <Card className="bg-card border-border shadow-sm p-6">
             {!isSearching ? (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold font-headline text-white mb-1">Select Battle Mode</h3>
-                  <p className="text-xs text-muted-foreground">Choose between global all-topic ranked matches or focused topic battles.</p>
+                  <h3 className="text-base font-bold font-headline text-foreground mb-1">Select Battle Mode</h3>
+                  <p className="text-xs text-muted-foreground">Choose between global all-topic ranked matchmaking or focused topic duels.</p>
                 </div>
 
                 {/* Mode Select Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div
                     onClick={() => setSelectedConcept("all")}
                     className={`p-4 rounded-xl border cursor-pointer transition-all ${
                       selectedConcept === "all"
-                        ? "bg-purple-950/60 border-accent ring-2 ring-accent/30 shadow-lg shadow-purple-950/40"
-                        : "bg-[#121216]/80 border-border/70 hover:border-border"
+                        ? "bg-primary/5 border-primary ring-1 ring-primary/40 shadow-xs"
+                        : "bg-muted/20 border-border hover:bg-muted/40 hover:border-border/80"
                     }`}
                   >
-                    <div className="flex items-center gap-3.5">
-                      <div className="h-11 w-11 rounded-xl bg-accent/20 border border-accent/40 flex items-center justify-center text-accent">
-                        <Swords className="h-6 w-6" />
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                        <Swords className="h-5 w-5" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-sm text-white">Ranked All-Topics</h4>
-                        <p className="text-xs text-muted-foreground">Any DSA concept across full catalog</p>
+                        <h4 className="font-bold text-xs sm:text-sm text-foreground">Ranked All-Topics</h4>
+                        <p className="text-[11px] text-muted-foreground">DSA catalog cross-topic matchmaking</p>
                       </div>
                     </div>
                   </div>
@@ -273,30 +276,30 @@ export default function BattleLobbyPage() {
                     onClick={() => setSelectedConcept("trees")}
                     className={`p-4 rounded-xl border cursor-pointer transition-all ${
                       selectedConcept !== "all"
-                        ? "bg-purple-950/60 border-accent ring-2 ring-accent/30 shadow-lg shadow-purple-950/40"
-                        : "bg-[#121216]/80 border-border/70 hover:border-border"
+                        ? "bg-primary/5 border-primary ring-1 ring-primary/40 shadow-xs"
+                        : "bg-muted/20 border-border hover:bg-muted/40 hover:border-border/80"
                     }`}
                   >
-                    <div className="flex items-center gap-3.5">
-                      <div className="h-11 w-11 rounded-xl bg-purple-900/30 border border-purple-700/40 flex items-center justify-center text-purple-300">
-                        <Zap className="h-6 w-6" />
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                        <Zap className="h-5 w-5" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-sm text-white">Targeted Topic Duel</h4>
-                        <p className="text-xs text-muted-foreground">Focus on a specific DSA concept</p>
+                        <h4 className="font-bold text-xs sm:text-sm text-foreground">Targeted Topic Duel</h4>
+                        <p className="text-[11px] text-muted-foreground">Focus on a specific DSA concept</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {selectedConcept !== "all" && (
-                  <div className="space-y-2 pt-1 animate-in fade-in">
+                  <div className="space-y-1.5 pt-1 animate-in fade-in">
                     <label className="text-xs font-mono text-muted-foreground">Select Concept Topic</label>
                     <Select value={selectedConcept} onValueChange={setSelectedConcept}>
-                      <SelectTrigger className="bg-[#121216] border-border text-xs h-10">
+                      <SelectTrigger className="bg-background border-border text-xs h-9">
                         <SelectValue placeholder="Choose Topic" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#18181b] border-border text-xs">
+                      <SelectContent className="bg-popover border-border text-xs">
                         <SelectItem value="arrays">Arrays & Hashing</SelectItem>
                         <SelectItem value="strings">Strings & Patterns</SelectItem>
                         <SelectItem value="linked-lists">Linked Lists</SelectItem>
@@ -311,95 +314,99 @@ export default function BattleLobbyPage() {
                 )}
 
                 {/* Primary Fast Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-3">
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <Button
                     size="lg"
                     onClick={startMatchmaking}
-                    className="flex-1 h-14 text-sm sm:text-base font-bold bg-gradient-to-r from-[#4B0082] to-[#BF00FF] hover:from-[#5c00a0] hover:to-[#d000ff] text-white shadow-xl shadow-purple-900/40 transition-all hover:scale-[1.01]"
+                    className="flex-1 h-11 text-xs sm:text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm transition-all"
                   >
-                    <Swords className="mr-2 h-5 w-5" />
-                    Enter 1v1 Ranked Queue
+                    <Swords className="mr-2 h-4 w-4" />
+                    Enter Ranked Matchmaking
                   </Button>
 
                   <Button
                     size="lg"
                     variant="outline"
                     onClick={startInstantBotDuel}
-                    className="h-14 px-6 text-xs sm:text-sm font-semibold border-purple-500/40 bg-purple-950/30 text-purple-200 hover:bg-purple-900/50"
+                    disabled={isBotStarting}
+                    className="h-11 px-5 text-xs sm:text-sm font-semibold border-border bg-background hover:bg-muted/50"
                   >
-                    <Bot className="mr-2 h-4 w-4 text-accent" />
-                    Practice vs Arena AI
+                    {isBotStarting ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" />
+                    ) : (
+                      <Bot className="mr-2 h-4 w-4 text-primary" />
+                    )}
+                    {isBotStarting ? "Spawning AI Bot..." : "Practice vs Arena AI"}
                   </Button>
                 </div>
               </div>
             ) : (
-              /* High-Tech Matchmaking HUD Search State */
-              <div className="py-12 flex flex-col items-center justify-center text-center space-y-6">
+              /* Matchmaking HUD Search State */
+              <div className="py-10 flex flex-col items-center justify-center text-center space-y-6">
                 {matchedOpponent ? (
-                  <div className="space-y-6 animate-in fade-in zoom-in duration-300">
-                    <Badge className="bg-green-950 text-green-300 border-green-500/40 font-mono text-xs px-4 py-1.5 shadow-lg shadow-green-950/30">
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-400" />
+                  <div className="space-y-5 animate-in fade-in zoom-in duration-300">
+                    <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 font-mono text-xs px-3.5 py-1">
+                      <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />
                       Opponent Locked In!
                     </Badge>
 
-                    {/* Dramatic Player VS Card */}
-                    <div className="flex items-center justify-center gap-8 sm:gap-12 p-6 rounded-2xl bg-[#121216]/90 border border-purple-900/40 shadow-2xl">
-                      <div className="flex flex-col items-center space-y-2">
-                        <Avatar className="h-20 w-20 border-3 border-accent ring-4 ring-purple-900/40 shadow-lg">
+                    {/* Player VS Card */}
+                    <div className="flex items-center justify-center gap-8 sm:gap-12 p-6 rounded-xl bg-muted/30 border border-border shadow-sm">
+                      <div className="flex flex-col items-center space-y-1.5">
+                        <Avatar className="h-16 w-16 border-2 border-primary ring-4 ring-primary/10 shadow-sm">
                           <AvatarImage src={user?.avatar} />
                           <AvatarFallback>{user?.username?.slice(0, 2)}</AvatarFallback>
                         </Avatar>
-                        <span className="font-bold text-sm text-white">{user?.username}</span>
-                        <Badge className="bg-purple-950 text-yellow-400 font-mono font-bold text-xs">
+                        <span className="font-bold text-xs text-foreground">{user?.username}</span>
+                        <Badge variant="secondary" className="font-mono text-[10px]">
                           {user?.rating || 1000} Elo
                         </Badge>
                       </div>
 
-                      <div className="text-4xl font-black font-headline bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent animate-pulse">
+                      <div className="text-2xl font-black font-headline text-primary animate-pulse">
                         VS
                       </div>
 
-                      <div className="flex flex-col items-center space-y-2">
-                        <Avatar className="h-20 w-20 border-3 border-pink-500 ring-4 ring-pink-900/40 shadow-lg">
+                      <div className="flex flex-col items-center space-y-1.5">
+                        <Avatar className="h-16 w-16 border-2 border-primary ring-4 ring-primary/10 shadow-sm">
                           <AvatarImage src={matchedOpponent?.avatar} />
                           <AvatarFallback>{matchedOpponent?.username?.slice(0, 2)}</AvatarFallback>
                         </Avatar>
-                        <span className="font-bold text-sm text-white">{matchedOpponent?.username}</span>
-                        <Badge className="bg-purple-950 text-yellow-400 font-mono font-bold text-xs">
+                        <span className="font-bold text-xs text-foreground">{matchedOpponent?.username}</span>
+                        <Badge variant="secondary" className="font-mono text-[10px]">
                           {matchedOpponent?.rating || 1000} Elo
                         </Badge>
                       </div>
                     </div>
 
-                    <p className="text-xs font-mono text-purple-300 animate-pulse flex items-center justify-center gap-2">
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-accent" />
-                      Entering Combat Arena in 2 seconds...
+                    <p className="text-xs font-mono text-primary animate-pulse flex items-center justify-center gap-2">
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      Entering Combat Arena...
                     </p>
                   </div>
                 ) : (
                   /* Animated Radar Scanner */
-                  <div className="space-y-6">
-                    <div className="relative flex items-center justify-center h-28 w-28 mx-auto">
-                      <div className="absolute inset-0 rounded-full border-2 border-accent/20 animate-ping" />
-                      <div className="absolute inset-2 rounded-full border border-purple-500/30 animate-pulse" />
-                      <div className="h-24 w-24 rounded-full bg-purple-950/60 border-2 border-accent flex items-center justify-center text-accent shadow-2xl shadow-purple-900/40">
-                        <Swords className="h-10 w-10 animate-bounce" />
+                  <div className="space-y-5">
+                    <div className="relative flex items-center justify-center h-24 w-24 mx-auto">
+                      <div className="absolute inset-0 rounded-full border border-primary/20 animate-ping" />
+                      <div className="h-20 w-20 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary shadow-sm">
+                        <Swords className="h-8 w-8 animate-bounce" />
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <h3 className="text-2xl font-bold font-headline text-white">
-                        Searching for Worthy Opponent...
+                    <div className="space-y-1.5">
+                      <h3 className="text-xl font-bold font-headline text-foreground">
+                        Searching for Opponent...
                       </h3>
                       <p className="text-xs text-muted-foreground font-mono">
-                        Proximity rating (~{user?.rating || 1000} Elo) • Queue Time: <strong className="text-accent text-sm">{formatQueueTime(queueTime)}</strong>
+                        Rating target (~{user?.rating || 1000} Elo) • Queue Time: <strong className="text-primary font-bold">{formatQueueTime(queueTime)}</strong>
                       </p>
                     </div>
 
                     <Button
                       variant="outline"
                       onClick={cancelMatchmaking}
-                      className="border-red-500/40 text-red-400 hover:bg-red-950/40 text-xs px-6 h-9"
+                      className="border-destructive/40 text-destructive hover:bg-destructive/10 text-xs px-5 h-8"
                     >
                       Cancel Search
                     </Button>
@@ -412,67 +419,95 @@ export default function BattleLobbyPage() {
 
         {/* RIGHT COL: Arena Stats & Recent Match Logs */}
         <div className="space-y-6">
-          <Card className="bg-[#18181c]/90 border-border/80 shadow-xl">
-            <CardHeader className="pb-3 flex flex-row items-center justify-between">
-              <CardTitle className="text-base font-bold font-headline flex items-center gap-2">
-                <Activity className="h-4 w-4 text-accent" />
-                Performance Telemetry
+          <Card className="bg-card border-border shadow-sm">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between p-5">
+              <CardTitle className="text-sm font-bold font-headline flex items-center gap-2 text-foreground">
+                <Activity className="h-4 w-4 text-primary" />
+                Ranked Telemetry
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="px-5 pb-5 space-y-3">
               <div className="grid grid-cols-2 gap-3 text-center">
-                <div className="p-3 rounded-xl bg-[#121216] border border-border/50">
+                <div className="p-3 rounded-lg bg-muted/40 border border-border">
                   <span className="text-[10px] uppercase font-mono text-muted-foreground">Rating</span>
-                  <p className="text-2xl font-black font-headline text-yellow-400">{user?.rating || 1000}</p>
+                  <p className="text-xl font-bold font-headline text-foreground">{user?.rating || 1000}</p>
                 </div>
-                <div className="p-3 rounded-xl bg-[#121216] border border-border/50">
+                <div className="p-3 rounded-lg bg-muted/40 border border-border">
                   <span className="text-[10px] uppercase font-mono text-muted-foreground">Win Rate</span>
-                  <p className="text-2xl font-black font-headline text-accent">
+                  <p className="text-xl font-bold font-headline text-primary">
                     {roundWinRate(user?.wins || 0, user?.losses || 0)}%
                   </p>
                 </div>
               </div>
 
-              <div className="flex justify-between text-xs font-mono text-muted-foreground pt-2 border-t border-border/40">
-                <span>Victories: <strong className="text-green-400 font-bold">{user?.wins || 0}</strong></span>
-                <span>Defeats: <strong className="text-red-400 font-bold">{user?.losses || 0}</strong></span>
+              <div className="flex justify-between text-xs font-mono text-muted-foreground pt-1 border-t border-border">
+                <span>Victories: <strong className="text-emerald-600 dark:text-emerald-400 font-semibold">{user?.wins || 0}</strong></span>
+                <span>Defeats: <strong className="text-red-600 dark:text-red-400 font-semibold">{user?.losses || 0}</strong></span>
               </div>
             </CardContent>
           </Card>
 
-          {/* Recent Duels List */}
-          <Card className="bg-[#18181c]/90 border-border/80 shadow-xl">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-bold font-headline">Recent Match Logs</CardTitle>
+          {/* Recent Match Logs List */}
+          <Card className="bg-card border-border shadow-sm">
+            <CardHeader className="pb-3 p-5 flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-bold font-headline text-foreground">Recent Match Logs</CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={fetchLobbyData}
+                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                title="Refresh logs"
+              >
+                <RotateCw className="h-3.5 w-3.5" />
+              </Button>
             </CardHeader>
-            <CardContent className="space-y-2.5">
-              {battleHistory.slice(0, 5).map((b, idx) => (
+            <CardContent className="px-5 pb-5 space-y-2">
+              {battleHistory.slice(0, 6).map((b, idx) => (
                 <div
-                  key={idx}
-                  className="flex items-center justify-between p-3 rounded-xl bg-[#121216]/80 border border-border/50 text-xs font-mono"
+                  key={b.battle_id || idx}
+                  className="flex items-center justify-between p-2.5 rounded-lg bg-muted/30 border border-border text-xs font-mono hover:bg-muted/60 transition-all"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <span className={`font-bold px-2 py-0.5 rounded text-[10px] uppercase ${
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className={`font-bold px-1.5 py-0.5 rounded text-[9px] uppercase flex-shrink-0 ${
                       b.result === "win"
-                        ? "bg-green-950 text-green-400 border border-green-500/30"
+                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
                         : b.result === "draw"
-                        ? "bg-yellow-950 text-yellow-400 border border-yellow-500/30"
-                        : "bg-red-950 text-red-400 border border-red-500/30"
+                        ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                        : b.result === "in_progress"
+                        ? "bg-primary/10 text-primary border border-primary/30 animate-pulse"
+                        : "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30"
                     }`}>
-                      {b.result}
+                      {b.result === "in_progress" ? "ACTIVE" : b.result}
                     </span>
-                    <span className="text-foreground font-semibold">vs {b.opponent_name || "Opponent"}</span>
+                    <div className="min-w-0">
+                      <div className="text-foreground font-semibold truncate max-w-[130px]">
+                        vs {b.opponent_name || "Opponent"}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground truncate">
+                        {b.problem_title || b.problem_id || "Duel"}
+                      </div>
+                    </div>
                   </div>
 
-                  <span className={b.rating_delta >= 0 ? "text-green-400 font-bold" : "text-red-400 font-bold"}>
-                    {b.rating_delta >= 0 ? `+${b.rating_delta}` : b.rating_delta} Elo
-                  </span>
+                  <div className="text-right flex-shrink-0">
+                    {b.result === "in_progress" ? (
+                      <Link href={`/battle/${b.battle_id}`}>
+                        <Button size="sm" variant="outline" className="h-6 text-[10px] px-2 text-primary border-primary/30 hover:bg-primary/10">
+                          Resume
+                        </Button>
+                      </Link>
+                    ) : (
+                      <span className={`font-semibold ${b.rating_delta >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+                        {b.rating_delta >= 0 ? `+${b.rating_delta}` : b.rating_delta} Elo
+                      </span>
+                    )}
+                  </div>
                 </div>
               ))}
 
               {battleHistory.length === 0 && (
                 <p className="text-center py-6 text-xs text-muted-foreground">
-                  No matches completed yet. Enter the arena queue to test your skill!
+                  No matches completed yet. Enter queue to test your skills!
                 </p>
               )}
             </CardContent>

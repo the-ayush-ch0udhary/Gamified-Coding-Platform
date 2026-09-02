@@ -8,7 +8,7 @@
       "type": "solved_count",
       "value": 1
     },
-    "_id": "b8fa900e-abab-497c-8005-44151fd0730d"
+    "_id": "58689202-6f1e-4a2c-ba16-1f66de630d2e"
   },
   {
     "badge_id": "ten_problems",
@@ -19,7 +19,7 @@
       "type": "solved_count",
       "value": 10
     },
-    "_id": "e8f5dd76-048f-4c54-84de-a34326f78ae1"
+    "_id": "86d395bd-2d07-4a72-b7e1-cdab1b67bad2"
   },
   {
     "badge_id": "fifty_problems",
@@ -30,7 +30,7 @@
       "type": "solved_count",
       "value": 50
     },
-    "_id": "ee3ea0b9-25b9-43de-a886-08a2c86fc593"
+    "_id": "1cafd768-4ad9-43aa-8683-d715aef705db"
   },
   {
     "badge_id": "first_win",
@@ -41,7 +41,7 @@
       "type": "battle_wins",
       "value": 1
     },
-    "_id": "76111240-6b00-413d-8ca4-821495a6181e"
+    "_id": "9b9fd7ce-e37b-4517-a976-3270b2920de5"
   },
   {
     "badge_id": "ten_wins",
@@ -52,7 +52,7 @@
       "type": "battle_wins",
       "value": 10
     },
-    "_id": "bc217194-8914-410f-aac2-8ace613487a6"
+    "_id": "60356412-8596-4a1b-a9cc-43ad531bff11"
   },
   {
     "badge_id": "streak_7",
@@ -63,7 +63,7 @@
       "type": "streak_days",
       "value": 7
     },
-    "_id": "139588a8-3a0a-44a1-9562-85ea818077af"
+    "_id": "0640740e-6a70-4f0d-ad8b-aee099af323f"
   },
   {
     "badge_id": "streak_30",
@@ -74,7 +74,7 @@
       "type": "streak_days",
       "value": 30
     },
-    "_id": "99be3823-69a1-44fe-9318-0032860974c4"
+    "_id": "9e1cefec-06c4-452b-b829-e52c7b8f262a"
   },
   {
     "badge_id": "hard_master",
@@ -85,6 +85,6 @@
       "type": "hard_problems",
       "value": 3
     },
-    "_id": "d16f2b8a-455e-4e5f-8888-f95149ad231b"
+    "_id": "b839d0ce-73cb-41fa-ac5e-4c9c71f06b00"
   }
 ]

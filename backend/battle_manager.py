@@ -78,6 +78,7 @@ class BattleRoom:
         self.winner_id: Optional[str] = None
         self.loser_id: Optional[str] = None
         self.is_draw = False
+        self.bot_tasks: List[asyncio.Task] = []
 
         self.players = {
             p1_data["user_id"]: {
@@ -168,7 +169,73 @@ class BattleManager:
             "winner_id": None
         })
 
+        # Start bot background simulation if any participant is a bot
+        for uid, pdata in [ (p1["user_id"], p1), (p2["user_id"], p2) ]:
+            if self._is_bot_player(uid):
+                bot_task = asyncio.create_task(self._simulate_bot(room, uid))
+                room.bot_tasks.append(bot_task)
+
         return room
+
+    def _is_bot_player(self, user_id: str) -> bool:
+        if not user_id:
+            return False
+        return str(user_id).startswith("bot_") or user_id in ("bot_arena_ai", "Nexus_AI_Bot", "opponent")
+
+    async def _simulate_bot(self, room: BattleRoom, bot_id: str):
+        """
+        Simulates realistic coding duel behavior for AI bots:
+        Progressively solves test cases with realistic delay intervals.
+        """
+        try:
+            # Initial thinking and coding startup delay
+            await asyncio.sleep(random.uniform(4.0, 7.0))
+            if room.status != "active":
+                return
+
+            problem = problems_collection.find_one({"problem_id": room.problem_id}) or {}
+            test_cases = problem.get("testCases", [])
+            total_cases = len(test_cases) if test_cases else 4
+            
+            bot_rating = room.players.get(bot_id, {}).get("rating", 1000)
+
+            for step in range(1, total_cases + 1):
+                # Calculate interval per test case based on bot rating
+                base_delay = 8.0 if bot_rating >= 1100 else 12.0
+                delay = random.uniform(base_delay - 2.0, base_delay + 5.0)
+                await asyncio.sleep(delay)
+
+                if room.status != "active":
+                    break
+
+                # Update bot player progress
+                if bot_id in room.players:
+                    room.players[bot_id]["passed_test_cases"] = step
+                    room.players[bot_id]["total_test_cases"] = total_cases
+                    room.players[bot_id]["connected"] = True
+
+                pct = round((step / max(1, total_cases)) * 100.0, 1)
+
+                # Broadcast live opponent progress
+                await self.broadcast(room.battle_id, {
+                    "type": "opponent_progress",
+                    "user_id": bot_id,
+                    "passed_test_cases": step,
+                    "total_test_cases": total_cases,
+                    "progress_percentage": pct
+                })
+
+                # If all test cases solved by bot and match is still active
+                if step == total_cases and room.status == "active":
+                    await asyncio.sleep(1.0)
+                    if room.status == "active":
+                        await self.finish_battle(room.battle_id, winner_id=bot_id, reason="solved")
+                    break
+
+        except asyncio.CancelledError:
+            pass
+        except Exception as e:
+            logger.warning(f"Error in bot simulation for battle {room.battle_id}: {e}")
 
     def get_room(self, battle_id: str) -> Optional[BattleRoom]:
         if battle_id in self.rooms:
@@ -305,6 +372,11 @@ class BattleManager:
 
         room.status = "completed" if winner_id else "timeout"
         room.winner_id = winner_id
+
+        # Cancel any running bot simulation tasks
+        for task in room.bot_tasks:
+            if not task.done():
+                task.cancel()
 
         player_ids = list(room.players.keys())
         if len(player_ids) < 2:

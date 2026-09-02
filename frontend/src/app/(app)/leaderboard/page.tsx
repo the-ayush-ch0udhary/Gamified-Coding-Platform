@@ -61,129 +61,127 @@ export default function LeaderboardPage() {
   const rest = filtered.slice(3);
 
   return (
-    <div className="container mx-auto py-8 px-4 space-y-8 max-w-6xl">
+    <div className="container mx-auto py-6 px-4 space-y-6 max-w-6xl">
       {/* Top Banner */}
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 rounded-full border border-yellow-500/30 bg-yellow-950/30 px-3.5 py-1 text-xs font-mono text-yellow-300">
-          <Trophy className="h-3.5 w-3.5 text-yellow-400" />
-          <span>Global Competitive Rankings</span>
+      <div className="text-center space-y-2">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-0.5 text-xs font-mono text-amber-600 dark:text-amber-400">
+          <Trophy className="h-3.5 w-3.5" />
+          <span>Ranked Competitive Standings</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">
-          Arena Leaderboard
+        <h1 className="text-3xl md:text-4xl font-bold font-headline tracking-tight text-foreground">
+          Global Arena Leaderboard
         </h1>
-        <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-          See who dominates the 1v1 Battle Arena. Ranks are determined by server-authoritative Elo rating and competitive XP.
+        <p className="text-muted-foreground text-xs sm:text-sm max-w-lg mx-auto">
+          Server-authoritative Elo standings from 1v1 Battle Arena and competitive achievements.
         </p>
       </div>
 
       {/* Controls: Timeframe Tabs & Search */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#18181b] p-3 rounded-xl border border-border">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-card p-3 rounded-lg border border-border shadow-xs">
         <Tabs value={timeframe} onValueChange={setTimeframe} className="w-full sm:w-auto">
-          <TabsList className="bg-[#121214] border border-border">
-            <TabsTrigger value="global" className="text-xs">All-Time Global</TabsTrigger>
-            <TabsTrigger value="weekly" className="text-xs">Weekly League</TabsTrigger>
-            <TabsTrigger value="monthly" className="text-xs">Monthly Season</TabsTrigger>
+          <TabsList className="bg-muted/60 border border-border h-8">
+            <TabsTrigger value="global" className="text-xs h-7">All-Time Global</TabsTrigger>
+            <TabsTrigger value="weekly" className="text-xs h-7">Weekly League</TabsTrigger>
+            <TabsTrigger value="monthly" className="text-xs h-7">Monthly Season</TabsTrigger>
           </TabsList>
         </Tabs>
 
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="relative w-full sm:w-60">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
             placeholder="Search competitor..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-[#121214] border-border text-xs h-9"
+            className="pl-8 bg-background border-border text-xs h-8"
           />
         </div>
       </div>
 
-      {/* Pinned Current User Rank (if logged in) */}
+      {/* Pinned Current User Rank */}
       {currentUserEntry && (
-        <div className="p-4 rounded-xl bg-gradient-to-r from-[#2a1745] via-[#1f1533] to-[#121214] border-2 border-accent shadow-lg flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="font-headline font-bold text-2xl text-accent">#{currentUserEntry.rank}</span>
-            <Avatar className="h-11 w-11 border-2 border-accent">
+        <div className="p-4 rounded-lg bg-card border border-primary/30 shadow-sm flex items-center justify-between">
+          <div className="flex items-center gap-3.5">
+            <span className="font-headline font-bold text-xl text-primary">#{currentUserEntry.rank}</span>
+            <Avatar className="h-10 w-10 border border-primary/20">
               <AvatarImage src={currentUserEntry.avatar} />
               <AvatarFallback>{currentUserEntry.username.slice(0, 2)}</AvatarFallback>
             </Avatar>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-sm text-white">{currentUserEntry.username} (You)</span>
-                <Badge className="bg-purple-900 text-purple-200 text-[10px] font-mono">Lv.{currentUserEntry.level}</Badge>
+                <span className="font-bold text-xs sm:text-sm text-foreground">{currentUserEntry.username} (You)</span>
+                <Badge variant="secondary" className="text-[10px] font-mono">Lv.{currentUserEntry.level}</Badge>
               </div>
-              <p className="text-xs font-mono text-muted-foreground">
+              <p className="text-[11px] font-mono text-muted-foreground">
                 {currentUserEntry.wins}W - {currentUserEntry.losses}L ({currentUserEntry.win_rate}% Win Rate)
               </p>
             </div>
           </div>
 
           <div className="text-right">
-            <span className="text-xl font-bold font-headline text-yellow-400">{currentUserEntry.rating}</span>
-            <p className="text-[10px] text-muted-foreground uppercase font-mono">Elo Rating</p>
+            <span className="text-lg font-bold font-headline text-foreground">{currentUserEntry.rating}</span>
+            <p className="text-[9px] text-muted-foreground uppercase font-mono">Elo Rating</p>
           </div>
         </div>
       )}
 
       {loading ? (
-        <div className="py-20 flex flex-col items-center justify-center min-h-[30vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-accent mb-3" />
+        <div className="py-16 flex flex-col items-center justify-center min-h-[30vh]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mb-3" />
           <p className="text-muted-foreground font-mono text-xs">Fetching ranked standings...</p>
         </div>
       ) : (
         <>
           {/* Top 3 Podium Cards */}
           {topThree.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
               {topThree.map((user, idx) => {
                 const rankNum = idx + 1;
                 const isFirst = rankNum === 1;
-                const isSecond = rankNum === 2;
 
                 return (
                   <Card
                     key={user.id}
-                    className={`relative overflow-hidden transition-all flex flex-col items-center text-center p-6 ${
+                    className={`relative overflow-hidden transition-all flex flex-col items-center text-center p-5 bg-card shadow-xs ${
                       isFirst
-                        ? "bg-gradient-to-b from-[#2e2008] via-[#1c1626] to-[#121214] border-2 border-yellow-500/60 shadow-xl shadow-yellow-900/20 md:-translate-y-3"
-                        : isSecond
-                        ? "bg-[#18181b] border-slate-400/40"
-                        : "bg-[#18181b] border-amber-700/40"
+                        ? "border-amber-500/50 ring-1 ring-amber-500/20 md:-translate-y-1.5"
+                        : "border-border"
                     }`}
                   >
-                    {isFirst && (
-                      <Crown className="absolute top-3 right-3 h-6 w-6 text-yellow-400 animate-bounce" />
-                    )}
-
-                    <div className={`h-8 w-8 rounded-full flex items-center justify-center font-headline font-bold text-sm mb-3 ${
-                      isFirst
-                        ? "bg-yellow-500 text-black shadow-md shadow-yellow-500/30"
-                        : isSecond
-                        ? "bg-slate-300 text-black"
-                        : "bg-amber-600 text-white"
-                    }`}>
-                      #{rankNum}
+                    <div className="absolute top-3 left-3">
+                      <span className={`font-headline font-bold text-xs px-2 py-0.5 rounded-full ${
+                        rankNum === 1
+                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                          : rankNum === 2
+                          ? "bg-slate-500/10 text-slate-600 dark:text-slate-300 border border-slate-400/30"
+                          : "bg-amber-700/10 text-amber-700 dark:text-amber-600 border border-amber-700/30"
+                      }`}>
+                        #{rankNum}
+                      </span>
                     </div>
 
-                    <Avatar className={`h-20 w-20 border-3 mb-3 ${
-                      isFirst ? "border-yellow-400 ring-4 ring-yellow-500/20" : isSecond ? "border-slate-300" : "border-amber-600"
+                    <Avatar className={`h-16 w-16 mb-2.5 border-2 shadow-xs ${
+                      rankNum === 1 ? "border-amber-500 ring-4 ring-amber-500/10" : "border-border"
                     }`}>
                       <AvatarImage src={user.avatar} />
                       <AvatarFallback>{user.username.slice(0, 2)}</AvatarFallback>
                     </Avatar>
 
-                    <h3 className="font-bold text-base text-white">{user.username}</h3>
-                    <Badge className="bg-[#25252a] text-purple-300 border-0 font-mono text-[10px] my-1">
-                      Level {user.level}
-                    </Badge>
+                    <h3 className="font-bold text-sm font-headline text-foreground">{user.username}</h3>
+                    <p className="text-xs text-muted-foreground font-mono mt-0.5">Level {user.level}</p>
 
-                    <div className="mt-2 text-2xl font-bold font-headline text-yellow-400">
-                      {user.rating} <span className="text-xs font-normal text-muted-foreground font-mono">Elo</span>
-                    </div>
-
-                    <div className="flex items-center gap-3 text-xs font-mono text-muted-foreground mt-3 pt-3 border-t border-border/40 w-full justify-center">
-                      <span>{user.wins}W - {user.losses}L</span>
-                      <span>•</span>
-                      <span>{user.win_rate}% Win Rate</span>
+                    <div className="mt-3 pt-3 border-t border-border w-full flex justify-around text-xs font-mono">
+                      <div>
+                        <span className="text-[10px] text-muted-foreground uppercase">Rating</span>
+                        <p className="font-bold text-primary">{user.rating}</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-muted-foreground uppercase">Win Rate</span>
+                        <p className="font-bold text-foreground">{user.win_rate}%</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-muted-foreground uppercase">XP</span>
+                        <p className="font-bold text-foreground">{user.total_points}</p>
+                      </div>
                     </div>
                   </Card>
                 );
@@ -191,71 +189,51 @@ export default function LeaderboardPage() {
             </div>
           )}
 
-          {/* Rest of the Leaderboard Table */}
-          <div className="rounded-xl border border-border/80 bg-[#18181b]/80 overflow-hidden shadow-md">
+          {/* Full Leaderboard Table */}
+          <Card className="bg-card border-border shadow-xs overflow-hidden">
             <Table>
-              <TableHeader className="bg-[#141418] border-b border-border/60">
+              <TableHeader className="bg-muted/40 text-xs">
                 <TableRow>
-                  <TableHead className="w-16 font-mono text-xs">Rank</TableHead>
-                  <TableHead className="font-mono text-xs">Competitor</TableHead>
-                  <TableHead className="font-mono text-xs text-center">Level</TableHead>
-                  <TableHead className="font-mono text-xs text-right">Rating</TableHead>
-                  <TableHead className="font-mono text-xs text-right">XP</TableHead>
-                  <TableHead className="font-mono text-xs text-right">W / L</TableHead>
-                  <TableHead className="font-mono text-xs text-right">Win Rate</TableHead>
+                  <TableHead className="w-16">Rank</TableHead>
+                  <TableHead>Competitor</TableHead>
+                  <TableHead>Level</TableHead>
+                  <TableHead className="text-center">Record</TableHead>
+                  <TableHead className="text-center">Win Rate</TableHead>
+                  <TableHead className="text-right">Elo Rating</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="text-xs font-mono">
                 {filtered.map((user) => (
-                  <TableRow
-                    key={user.id}
-                    className={`border-b border-border/40 hover:bg-secondary/40 transition-colors ${
-                      user.is_current_user ? "bg-purple-950/20 font-bold" : ""
-                    }`}
-                  >
-                    <TableCell className="font-mono font-bold text-sm">
+                  <TableRow key={user.id} className="hover:bg-muted/30">
+                    <TableCell className="font-bold text-muted-foreground">
                       #{user.rank}
                     </TableCell>
-
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8 border border-border">
+                    <TableCell className="font-sans">
+                      <div className="flex items-center gap-2.5">
+                        <Avatar className="h-7 w-7 border border-border">
                           <AvatarImage src={user.avatar} />
                           <AvatarFallback>{user.username.slice(0, 2)}</AvatarFallback>
                         </Avatar>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-sm text-foreground">{user.username}</span>
-                          {user.is_current_user && (
-                            <Badge className="bg-accent/20 text-accent border-accent/40 text-[10px] font-mono">You</Badge>
-                          )}
-                        </div>
+                        <span className="font-semibold text-foreground">{user.username}</span>
                       </div>
                     </TableCell>
-
-                    <TableCell className="text-center font-mono text-xs text-purple-300">
-                      Lv.{user.level}
+                    <TableCell>
+                      <Badge variant="secondary" className="text-[10px]">Lv.{user.level}</Badge>
                     </TableCell>
-
-                    <TableCell className="text-right font-headline font-bold text-yellow-400">
+                    <TableCell className="text-center text-muted-foreground">
+                      {user.wins}W - {user.losses}L
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{user.win_rate}%</span>
+                    </TableCell>
+                    <TableCell className="text-right font-bold text-primary font-headline">
                       {user.rating}
-                    </TableCell>
-
-                    <TableCell className="text-right font-mono text-xs text-muted-foreground">
-                      {user.total_points}
-                    </TableCell>
-
-                    <TableCell className="text-right font-mono text-xs">
-                      <span className="text-green-400">{user.wins}</span> / <span className="text-red-400">{user.losses}</span>
-                    </TableCell>
-
-                    <TableCell className="text-right font-mono text-xs font-bold text-purple-400">
-                      {user.win_rate}%
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </Card>
         </>
       )}
     </div>

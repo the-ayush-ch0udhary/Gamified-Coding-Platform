@@ -406,5 +406,50 @@
     "created_at": "2026-08-30T10:53:11.104437+00:00",
     "last_active_date": null,
     "gemini_api_key": null
+  },
+  {
+    "_id": "user_grandmaster_1",
+    "username": "CodeNinja",
+    "email": "codeninja@codeclash.dev",
+    "password_hash": "$2b$12$mvJIQ/inb98783c.S2MUsuQkk5aornrjYx.sj0LNGbVcyF.wPnpM.",
+    "rating": 1620,
+    "total_points": 850,
+    "level": 6,
+    "coins": 420,
+    "streak": 14,
+    "longest_streak": 21,
+    "wins": 34,
+    "losses": 8,
+    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=CodeNinja"
+  },
+  {
+    "_id": "user_grandmaster_2",
+    "username": "AlgoMaster",
+    "email": "algomaster@codeclash.dev",
+    "password_hash": "$2b$12$VVQoT11D9YTRt9vftFFMJeKPnJC7uXxWQMeWLWATJBeppE.SKc3py",
+    "rating": 1540,
+    "total_points": 720,
+    "level": 5,
+    "coins": 310,
+    "streak": 9,
+    "longest_streak": 15,
+    "wins": 28,
+    "losses": 11,
+    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=AlgoMaster"
+  },
+  {
+    "_id": "user_grandmaster_3",
+    "username": "ByteKnight",
+    "email": "byteknight@codeclash.dev",
+    "password_hash": "$2b$12$jpz5z2Z6TlnhnQ/RIA3Fjuz/vyOWiOWB2dWTe7E1TNVd00xPTMfNS",
+    "rating": 1480,
+    "total_points": 640,
+    "level": 5,
+    "coins": 260,
+    "streak": 6,
+    "longest_streak": 12,
+    "wins": 22,
+    "losses": 9,
+    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=ByteKnight"
   }
 ]

@@ -729,10 +729,10 @@ async def submit_code(request: CodeExecutionRequest, current_user: Dict[str, Any
 @app.get("/api/battle/history")
 async def get_battle_history(current_user: Dict[str, Any] = Depends(get_current_user)):
     user_id = current_user["_id"]
-    battles = battles_collection.find({
+    battles = list(battles_collection.find({
         "$or": [{"player1_id": user_id}, {"player2_id": user_id}]
-    })
-    battles.sort(key=lambda b: b.get("start_time", ""), reverse=True)
+    }))
+    battles.sort(key=lambda b: str(b.get("start_time") or ""), reverse=True)
 
     formatted_history = []
     for b in battles:
@@ -740,15 +740,30 @@ async def get_battle_history(current_user: Dict[str, Any] = Depends(get_current_
         opponent_name = b.get("player2_username") if is_p1 else b.get("player1_username")
         winner_id = b.get("winner_id")
         
-        result = "win" if winner_id == user_id else ("draw" if not winner_id and b.get("status") == "timeout" else "loss")
-        delta = b.get("rating_delta", {}).get(user_id, 0)
+        status = b.get("status", "completed")
+        if winner_id == user_id:
+            result = "win"
+        elif not winner_id and status in ("timeout", "draw"):
+            result = "draw"
+        elif status == "active":
+            result = "in_progress"
+        else:
+            result = "loss"
+            
+        rating_delta_map = b.get("rating_delta") or {}
+        delta = rating_delta_map.get(user_id, 0) if isinstance(rating_delta_map, dict) else 0
+
+        problem_id = b.get("problem_id", "two-sum")
+        problem = problems_collection.find_one({"problem_id": problem_id})
+        problem_title = problem.get("title", problem_id.replace("-", " ").title()) if problem else problem_id.replace("-", " ").title()
 
         formatted_history.append({
             "battle_id": b.get("battle_id"),
-            "problem_id": b.get("problem_id"),
-            "opponent_name": opponent_name,
+            "problem_id": problem_id,
+            "problem_title": problem_title,
+            "opponent_name": opponent_name or "Arena Opponent",
             "result": result,
-            "status": b.get("status"),
+            "status": status,
             "rating_delta": delta,
             "start_time": b.get("start_time"),
             "end_time": b.get("end_time")
@@ -762,13 +777,25 @@ async def create_battle_direct(
     current_user: Dict[str, Any] = Depends(get_current_user)
 ):
     """
-    Creates a direct battle room between two players.
+    Creates a direct battle room between current user and opponent / AI bot.
     """
-    p1 = data.get("player1", {"user_id": current_user["_id"], "username": current_user.get("username", "Player 1"), "rating": current_user.get("rating", 1000)})
-    p2 = data.get("player2", {"user_id": "opponent", "username": "Opponent", "rating": 1000})
+    p1 = {
+        "user_id": current_user["_id"],
+        "username": current_user.get("username", "Player 1"),
+        "rating": current_user.get("rating", 1000),
+        "avatar": current_user.get("avatar", f"https://api.dicebear.com/7.x/bottts/svg?seed={current_user.get('username', 'user')}")
+    }
+    
+    p2 = data.get("player2") or {
+        "user_id": "bot_arena_ai",
+        "username": "Nexus_AI_Bot",
+        "rating": max(900, current_user.get("rating", 1000) + 20),
+        "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=NexusAI"
+    }
+    
     problem_id = data.get("problem_id", "two-sum")
     room = battle_manager.create_battle(p1, p2, problem_id)
-    return {"battle_id": room.battle_id, "room": room.to_dict()}
+    return {"battle_id": room.battle_id, "room": room.to_dict(), "problem_id": room.problem_id}
 
 @app.get("/api/battle/{match_id}")
 async def get_battle_room_details(match_id: str, current_user: Dict[str, Any] = Depends(get_current_user)):
@@ -1157,6 +1184,41 @@ async def ws_matchmaking(websocket: WebSocket, token: Optional[str] = Query(None
                         "type": "queue_joined",
                         "message": "Searching for an opponent..."
                     }))
+
+                    # Launch background worker: if still in queue after 5 seconds, match with AI Opponent
+                    async def auto_match_bot_fallback(uid, u_username, u_rating, u_avatar, ws, conc):
+                        await asyncio.sleep(5.0)
+                        async with matchmaking_queue._lock:
+                            in_q = next((p for p in matchmaking_queue.queue if p["user_id"] == uid), None)
+                            if in_q and in_q.get("websocket") == ws:
+                                matchmaking_queue.queue = [p for p in matchmaking_queue.queue if p["user_id"] != uid]
+                                bot_p = {
+                                    "user_id": "bot_arena_ai",
+                                    "username": "Nexus_AI_Bot",
+                                    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=NexusAI",
+                                    "rating": max(900, u_rating + 15)
+                                }
+                                user_p = {
+                                    "user_id": uid,
+                                    "username": u_username,
+                                    "avatar": u_avatar,
+                                    "rating": u_rating
+                                }
+                                p_id = None
+                                if conc and conc != "all":
+                                    p_id = "invert-binary-tree" if conc == "trees" else "valid-anagram" if conc == "strings" else None
+                                room = battle_manager.create_battle(user_p, bot_p, p_id)
+                                try:
+                                    await ws.send_text(json.dumps({
+                                        "type": "match_found",
+                                        "battle_id": room.battle_id,
+                                        "problem_id": room.problem_id,
+                                        "opponent": bot_p
+                                    }))
+                                except Exception:
+                                    pass
+
+                    asyncio.create_task(auto_match_bot_fallback(user_id, user["username"], user.get("rating", 1000), user.get("avatar", ""), websocket, concept))
 
             elif action == "leave_queue":
                 await matchmaking_queue.remove_player(user_id)
