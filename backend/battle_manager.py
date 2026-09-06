@@ -51,7 +51,15 @@ class MatchmakingQueue:
                 return None
 
             # Find opponent (closest rating, matching concept if specified)
-            candidates = [p for p in self.queue if p["user_id"] != user_id]
+            target_concept = current_player.get("concept") or "all"
+            candidates = [
+                p for p in self.queue 
+                if p["user_id"] != user_id and (
+                    target_concept == "all" or 
+                    p.get("concept", "all") == "all" or 
+                    p.get("concept") == target_concept
+                )
+            ]
             if not candidates:
                 return None
 
@@ -189,7 +197,7 @@ class BattleManager:
         """
         try:
             # Initial thinking and coding startup delay
-            await asyncio.sleep(random.uniform(4.0, 7.0))
+            await asyncio.sleep(random.uniform(8.0, 14.0))
             if room.status != "active":
                 return
 
@@ -200,9 +208,9 @@ class BattleManager:
             bot_rating = room.players.get(bot_id, {}).get("rating", 1000)
 
             for step in range(1, total_cases + 1):
-                # Calculate interval per test case based on bot rating
-                base_delay = 8.0 if bot_rating >= 1100 else 12.0
-                delay = random.uniform(base_delay - 2.0, base_delay + 5.0)
+                # Realistic intervals per test case based on bot rating
+                base_delay = 18.0 if bot_rating >= 1100 else 24.0
+                delay = random.uniform(base_delay - 3.0, base_delay + 6.0)
                 await asyncio.sleep(delay)
 
                 if room.status != "active":
@@ -283,15 +291,7 @@ class BattleManager:
         if user_id in room.players:
             room.players[user_id]["connected"] = False
 
-        # If battle was active and a player exits/disconnects, it's an immediate forfeit and loss!
-        if room.status == "active":
-            opponent_id = next((uid for uid in room.players.keys() if uid != user_id), None)
-            if opponent_id:
-                logger.info(f"Player {user_id} disconnected/exited from battle {battle_id}. Opponent {opponent_id} wins by forfeit.")
-                await self.finish_battle(battle_id, winner_id=opponent_id, reason="forfeit")
-                return
-
-        # Broadcast state update
+        # Broadcast state update (do not auto-forfeit on temporary socket disconnects/page refreshes)
         await self.broadcast(battle_id, {
             "type": "player_disconnected",
             "user_id": user_id,
@@ -404,8 +404,8 @@ class BattleManager:
         u1 = users_collection.find_one({"_id": p1_id}) or {}
         u2 = users_collection.find_one({"_id": p2_id}) or {}
 
-        r1 = u1.get("rating", 1000)
-        r2 = u2.get("rating", 1000)
+        r1 = u1.get("rating", room.players.get(p1_id, {}).get("rating", 1000))
+        r2 = u2.get("rating", room.players.get(p2_id, {}).get("rating", 1000))
 
         if winner_id == p1_id:
             score1 = 1.0

@@ -5,6 +5,7 @@ import logging
 import random
 import time
 import uuid
+import hashlib
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List, Dict, Any
 
@@ -320,12 +321,16 @@ async def get_dashboard_data(current_user: Dict[str, Any] = Depends(get_current_
     medium_count = sum(1 for p in solved_problems_docs if p.get("difficulty") == "Medium")
     hard_count = sum(1 for p in solved_problems_docs if p.get("difficulty") == "Hard")
 
-    # Daily challenge
+    # Daily challenge (deterministic hash and daily completion check)
     today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    all_problems = list(problems_collection.find({}))
-    daily_idx = int(hash(today_str)) % max(1, len(all_problems))
+    all_problems = list(problems_collection.find({}, sort=[("problem_id", 1)]))
+    daily_idx = int(hashlib.md5(today_str.encode()).hexdigest(), 16) % max(1, len(all_problems)) if all_problems else 0
     daily_problem = all_problems[daily_idx] if all_problems else None
-    daily_solved = (daily_problem.get("problem_id") in solved_pids) if daily_problem else False
+    daily_solved = False
+    if daily_problem:
+        daily_pid = daily_problem.get("problem_id")
+        daily_solve_rec = daily_challenges_collection.find_one({"user_id": user_id, "date": today_str})
+        daily_solved = daily_solve_rec is not None
 
     # Recommended problems (target weak concepts & unsolved)
     unsolved_problems = [p for p in all_problems if p.get("problem_id") not in solved_pids]
@@ -645,6 +650,7 @@ async def submit_code(request: CodeExecutionRequest, current_user: Dict[str, Any
     coins_gained = 0
     new_badges = []
     is_first_solve = False
+    daily_bonus_xp = 0
 
     if all_passed:
         # Check if first time solving this problem
@@ -688,9 +694,6 @@ async def submit_code(request: CodeExecutionRequest, current_user: Dict[str, Any
                 }
             )
 
-            # Update streak
-            update_user_streak(user_id)
-
             # Check Badges
             new_badges = check_and_award_badges(user_id)
 
@@ -704,6 +707,39 @@ async def submit_code(request: CodeExecutionRequest, current_user: Dict[str, Any
                 "created_at": now_iso
             })
 
+        # Check if solving today's daily challenge
+        today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        all_probs = list(problems_collection.find({}, sort=[("problem_id", 1)]))
+        daily_idx = int(hashlib.md5(today_str.encode()).hexdigest(), 16) % max(1, len(all_probs)) if all_probs else 0
+        daily_problem_today = all_probs[daily_idx] if all_probs else None
+        daily_pid_today = daily_problem_today.get("problem_id") if daily_problem_today else None
+
+        if daily_pid_today and request.problem_id == daily_pid_today:
+            today_daily_solve = daily_challenges_collection.find_one({"user_id": user_id, "date": today_str})
+            if not today_daily_solve:
+                daily_bonus_xp = XP_REWARDS["daily_challenge_bonus"]
+                daily_challenges_collection.insert_one({
+                    "user_id": user_id,
+                    "date": today_str,
+                    "problem_id": daily_pid_today,
+                    "completed_at": now_iso
+                })
+                users_collection.update_one(
+                    {"_id": user_id},
+                    {"$inc": {"total_points": daily_bonus_xp, "coins": 10}}
+                )
+                activity_collection.insert_one({
+                    "user_id": user_id,
+                    "type": "daily_challenge_completed",
+                    "title": f"Completed Daily Challenge: {problem.get('title')}",
+                    "description": f"Earned +{daily_bonus_xp} Daily Bonus XP and +10 Coins",
+                    "problem_id": request.problem_id,
+                    "created_at": now_iso
+                })
+
+        # Always update user streak for active problem solving today
+        update_user_streak(user_id)
+
     # Fetch updated user info
     updated_user = users_collection.find_one({"_id": user_id})
     level_info = calculate_level_and_progress(updated_user.get("total_points", 0))
@@ -716,9 +752,11 @@ async def submit_code(request: CodeExecutionRequest, current_user: Dict[str, Any
         "passed_test_cases": exec_result.get("passed_test_cases"),
         "runtime_ms": exec_result.get("runtime_ms"),
         "test_results": exec_result.get("test_results", [])[:3],  # Return public test case summaries
+        "execution": exec_result,
         "is_first_solve": is_first_solve,
-        "xp_gained": xp_gained,
-        "coins_gained": coins_gained,
+        "xp_gained": xp_gained + daily_bonus_xp,
+        "daily_bonus_xp": daily_bonus_xp,
+        "coins_gained": coins_gained + (10 if daily_bonus_xp > 0 else 0),
         "new_badges": new_badges,
         "user_level_info": level_info,
         "streak": updated_user.get("streak", 0)
@@ -888,20 +926,19 @@ async def handle_battle_timeout(request: BattleTimeoutRequest, current_user: Dic
 @app.get("/api/daily-challenge")
 async def get_daily_challenge(current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional)):
     today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    all_problems = list(problems_collection.find({}))
+    all_problems = list(problems_collection.find({}, sort=[("problem_id", 1)]))
     if not all_problems:
         raise HTTPException(status_code=404, detail="No problems available")
 
-    daily_idx = int(hash(today_str)) % len(all_problems)
+    daily_idx = int(hashlib.md5(today_str.encode()).hexdigest(), 16) % len(all_problems)
     daily_problem = all_problems[daily_idx]
 
     daily_pid = daily_problem.get("problem_id", daily_problem.get("id"))
     is_solved = False
     if current_user:
-        solved_rec = user_problem_progress_collection.find_one({
+        solved_rec = daily_challenges_collection.find_one({
             "user_id": current_user["_id"],
-            "problem_id": daily_pid,
-            "status": "solved"
+            "date": today_str
         })
         is_solved = solved_rec is not None
 
@@ -1188,8 +1225,15 @@ async def ws_matchmaking(websocket: WebSocket, token: Optional[str] = Query(None
                 match = await matchmaking_queue.find_match(user_id)
                 if match:
                     p1, p2 = match
+                    # Pick problem based on concept if specified
+                    matched_concept = p1.get("concept") if p1.get("concept") != "all" else p2.get("concept")
+                    prob_id = None
+                    if matched_concept and matched_concept != "all":
+                        matched_probs = list(problems_collection.find({"concept_id": matched_concept}))
+                        if matched_probs:
+                            prob_id = random.choice(matched_probs).get("problem_id")
                     # Create Battle Room
-                    room = battle_manager.create_battle(p1, p2)
+                    room = battle_manager.create_battle(p1, p2, prob_id)
                     
                     match_payload = {
                         "type": "match_found",
@@ -1231,9 +1275,9 @@ async def ws_matchmaking(websocket: WebSocket, token: Optional[str] = Query(None
                         "message": "Searching for an opponent..."
                     }))
 
-                    # Launch background worker: if still in queue after 5 seconds, match with AI Opponent
+                    # Launch background worker: if still in queue after 20 seconds, match with AI Opponent
                     async def auto_match_bot_fallback(uid, u_username, u_rating, u_avatar, ws, conc):
-                        await asyncio.sleep(5.0)
+                        await asyncio.sleep(20.0)
                         async with matchmaking_queue._lock:
                             in_q = next((p for p in matchmaking_queue.queue if p["user_id"] == uid), None)
                             if in_q and in_q.get("websocket") == ws:
@@ -1252,7 +1296,9 @@ async def ws_matchmaking(websocket: WebSocket, token: Optional[str] = Query(None
                                 }
                                 p_id = None
                                 if conc and conc != "all":
-                                    p_id = "invert-binary-tree" if conc == "trees" else "valid-anagram" if conc == "strings" else None
+                                    matched_probs = list(problems_collection.find({"concept_id": conc}))
+                                    if matched_probs:
+                                        p_id = random.choice(matched_probs).get("problem_id")
                                 room = battle_manager.create_battle(user_p, bot_p, p_id)
                                 try:
                                     await ws.send_text(json.dumps({

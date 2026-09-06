@@ -70,6 +70,7 @@ import collections
 import heapq
 import bisect
 import itertools
+import ast
 
 # User code start
 {code}
@@ -83,7 +84,7 @@ all_passed = True
 total_runtime = 0.0
 
 # Discover callable functions if entry_point is not specified
-candidate_funcs = [v for k, v in list(locals().items()) if callable(v) and not k.startswith('_') and k not in ['json', 'sys', 'time', 'math', 'collections', 'heapq', 'bisect', 'itertools']]
+candidate_funcs = [v for k, v in list(locals().items()) if callable(v) and not k.startswith('_') and k not in ['json', 'sys', 'time', 'math', 'collections', 'heapq', 'bisect', 'itertools', 'ast']]
 target_func = None
 if "{entry_point or ''}" and "{entry_point or ''}" in locals():
     target_func = locals()["{entry_point or ''}"]
@@ -105,20 +106,21 @@ for idx, tc in enumerate(test_cases):
     
     start_t = time.perf_counter()
     try:
-        # Parse inputs
+        # Parse inputs safely
         args = []
-        if isinstance(raw_input, list):
-            args = raw_input
+        if isinstance(raw_input, (list, tuple)):
+            args = list(raw_input)
         elif isinstance(raw_input, dict):
             args = [raw_input]
         else:
-            # Try parsing comma-separated inputs or json
+            raw_str = str(raw_input).strip()
             try:
-                # E.g. "[2,7,11,15], 9" -> wrap in [] to make valid JSON tuple
-                parsed = json.loads(f"[{{raw_input}}]")
-                args = parsed
+                args = list(ast.literal_eval(f"[{{raw_str}}]"))
             except Exception:
-                args = [raw_input]
+                try:
+                    args = list(json.loads(f"[{{raw_str}}]"))
+                except Exception:
+                    args = [raw_str]
         
         if target_func:
             output = target_func(*args)
@@ -335,7 +337,11 @@ for (let i = 0; i < testCases.length; i++) {{
         try {{
             args = JSON.parse('[' + rawInput + ']');
         }} catch(e) {{
-            args = [rawInput];
+            try {{
+                args = eval('[' + rawInput + ']');
+            }} catch(e2) {{
+                args = [rawInput];
+            }}
         }}
 
         let output = targetFunc ? targetFunc(...args) : undefined;

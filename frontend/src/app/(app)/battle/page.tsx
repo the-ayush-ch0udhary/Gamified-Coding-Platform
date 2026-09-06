@@ -49,6 +49,7 @@ export default function BattleLobbyPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [matchedOpponent, setMatchedOpponent] = useState<any>(null);
   const [isBotStarting, setIsBotStarting] = useState<boolean>(false);
+  const [matchmakingError, setMatchmakingError] = useState<string | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);
   const queueTimerRef = useRef<any>(null);
@@ -99,6 +100,7 @@ export default function BattleLobbyPage() {
     setIsSearching(true);
     setQueueTime(0);
     setMatchedOpponent(null);
+    setMatchmakingError(null);
 
     queueTimerRef.current = setInterval(() => {
       setQueueTime((prev) => prev + 1);
@@ -140,6 +142,7 @@ export default function BattleLobbyPage() {
       console.error("Matchmaking WS error:", e);
       setIsSearching(false);
       clearInterval(queueTimerRef.current);
+      setMatchmakingError("Failed to connect to matchmaking server. Please ensure the backend is running and WebSocket URL is accessible.");
     };
   };
 
@@ -177,9 +180,13 @@ export default function BattleLobbyPage() {
       if (res.ok) {
         const data = await res.json();
         router.push(`/battle/${data.battle_id}`);
+      } else {
+        setMatchmakingError("Failed to create bot duel. Server responded with error.");
+        setIsBotStarting(false);
       }
     } catch (e) {
       console.error("Failed to start bot duel:", e);
+      setMatchmakingError("Could not reach backend arena server to start bot duel.");
       setIsBotStarting(false);
     }
   };
@@ -310,6 +317,13 @@ export default function BattleLobbyPage() {
                         <SelectItem value="greedy">Greedy Algorithms</SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+                )}
+
+                {matchmakingError && (
+                  <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs font-mono flex items-center gap-2 animate-in fade-in">
+                    <ShieldAlert className="h-4 w-4 flex-shrink-0 text-destructive" />
+                    <span>{matchmakingError}</span>
                   </div>
                 )}
 

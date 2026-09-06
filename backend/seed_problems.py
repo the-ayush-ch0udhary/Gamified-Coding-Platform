@@ -168,7 +168,6 @@ badges_data = [
         "criteria": {"type": "hard_problems", "value": 3}
     }
 ]
-badges_collection.insert_many(badges_data)
 
 # 3. 21+ Highly Explanatory DSA Problems with Detailed Intuitions & Hints
 problems_list = [

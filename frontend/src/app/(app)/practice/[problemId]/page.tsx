@@ -157,9 +157,10 @@ export default function ProblemSolvingPage({ params }: { params: Promise<{ probl
       });
 
       const data = await res.json();
-      if (data.execution) {
-        setRunResult(data.execution);
-        if (data.execution.success) {
+      const exec = data.execution || data;
+      if (exec && (exec.status || exec.test_results || exec.success !== undefined)) {
+        setRunResult(exec);
+        if (exec.success) {
           setSubmissionSuccessData(data);
           setSuccessModalOpen(true);
           try {
